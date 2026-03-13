@@ -1,0 +1,268 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+
+
+}
+
+datasource db {
+  provider = "mysql"
+    url = env("DATABASE_URL")
+}
+
+
+model User{
+    id    Int    @id @default(autoincrement())
+    name String 
+    email String
+    password  String 
+    phoneNumber  String 
+    profilePicture  String?
+    isConfirmed  Boolean @default(false)
+    role Sys_Role? @default(user)
+    gender Gender 
+    dateBirth DateTime
+    maritalStatus  maritalStatus
+    MilitarySituation  MilitarySituation?
+    ownedCompany Company?  @relation("CompanyAdmin")
+    company Company? @relation("CompanyEmployees",fields:[companyId],references:[id])
+    companyId Int?
+     isBaned Boolean @default(false)
+    CV String?
+    bio String?
+    experiences Experience[]
+    applications Application[]
+    savedJobs SavedJob[]
+    skills UserSkill[]
+    education Education?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    @@unique([email])
+
+}
+
+model Experience{
+   id    Int    @id @default(autoincrement())
+   user User @relation(fields:[userId],references:[id])
+   userId Int 
+   position String
+   company String
+   startDate DateTime
+   endDate DateTime?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Education{
+   id    Int    @id @default(autoincrement())
+   user User  @relation(fields:[userId],references:[id])
+   userId Int 
+   university String
+   college String
+   degree Degree
+   startDate DateTime
+  graduationYear Int
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+   @@unique([userId])
+
+}
+
+model Company {
+   id    Int    @id @default(autoincrement())
+  name String 
+    admin User  @relation("CompanyAdmin",fields:[adminId],references:[id])
+  adminId Int @unique
+  logo String?
+  description String
+  email String 
+  website String?
+  address String
+  formatAddress String?
+  latitude Float?
+  longitude Float?
+  workTypeId Int
+  workType WorkType @relation(fields:[workTypeId],references:[id])
+  deletedAt DateTime?
+  employees User[] @relation("CompanyEmployees")
+  jobs Job[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+   @@index([email,adminId,workTypeId,name])
+   @@index([latitude,longitude])
+    @@unique([email,adminId])
+}
+model WorkType{
+     id    Int    @id @default(autoincrement())
+     name String @unique
+     company Company[]
+      createdAt DateTime @default(now())
+}
+model JobCategory{
+  id    Int    @id @default(autoincrement())
+  name String @unique
+  description String?
+  jobs Job[]
+   createdAt DateTime @default(now())
+}
+
+model Job{
+    id    Int    @id @default(autoincrement())
+    position String
+    description String?
+    type jobType
+    location Location
+    company Company @relation(fields:[companyId],references:[id])
+    companyId Int
+    category JobCategory @relation(fields:[categoryId],references:[id])
+    categoryId Int
+    maxNumApplication Int @default(0)
+    applicationCount Int @default(0)
+    status JobStatus @default(open)
+   application Application[]
+   savedBy SavedJob[]
+   skills JobSkill[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+   @@index([companyId])
+}
+model Application{
+  id    Int    @id @default(autoincrement())
+  city String
+  phone String
+  expectedSalary Float
+  user User  @relation(fields:[userId],references:[id])
+  userId Int
+  job Job  @relation(fields:[jobId],references:[id])
+  jobId Int
+  CV String
+  status ApplicationStatus @default(pending)
+  noticePeriod Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([userId,jobId])
+  @@index([jobId])
+ }
+
+model SavedJob{
+  id    Int    @id @default(autoincrement())
+  user User @relation(fields:[userId],references:[id])
+  userId Int
+  job Job @relation(fields:[jobId],references:[id])
+  jobId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([userId,jobId])
+  @@unique([userId,jobId])
+}
+model Skill{
+    id    Int    @id @default(autoincrement())
+    skill String @unique
+    userSkills UserSkill[]
+    jobSkills JobSkill[]
+     createdAt DateTime @default(now())
+}
+model UserSkill{
+    id    Int    @id @default(autoincrement())
+    skill Skill @relation(fields:[skillId],references:[id])
+    skillId Int
+    level skillLevel
+    user User @relation(fields:[userId],references:[id])
+    userId Int
+    @@index([userId])
+    @@unique([userId,skillId])
+}
+model JobSkill{
+    id    Int    @id @default(autoincrement())
+    skill Skill @relation(fields:[skillId],references:[id])
+    skillId Int
+    job Job @relation(fields:[jobId],references:[id])
+    jobId Int
+    level skillLevel
+      @@index([jobId])
+    @@unique([jobId,skillId])
+}
+model AIReport {
+  id            Int     @id @default(autoincrement())
+  applicationId Int     @unique
+  ATSScore      Float?
+  summary       String?
+  strengths     String?
+  weaknesses    String?
+  decision      String?
+
+  application   Application @relation(fields: [applicationId], references: [id])
+  skillMatches  AISkillMatch[]
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model AISkillMatch {
+  id         Int     @id @default(autoincrement())
+  reportId   Int
+  skillName  String
+  matchScore Float
+
+  report     AIReport @relation(fields: [reportId], references: [id])
+
+  createdAt  DateTime @default(now())
+}
+
+//enums
+enum Sys_Role {
+  user
+company_admin
+  admin
+}
+ enum Gender {
+  male 
+  female
+}
+ enum maritalStatus {
+  single 
+  married 
+  divorced
+  widower 
+}
+ enum MilitarySituation{
+  exempt 
+  completed
+  postponed
+}
+
+enum Location{
+  remote
+  onsite
+  hybrid
+}
+enum jobType{
+part_time
+full_time
+}
+enum JobStatus{
+  open
+  closed
+}
+enum skillLevel{
+  beginner
+  intermediate
+  advanced
+}
+enum Degree{
+   Excellent 
+ very_good 
+      good 
+       low 
+}
+enum ApplicationStatus {
+  pending
+  reviewed
+  accept
+  rejected
+}
