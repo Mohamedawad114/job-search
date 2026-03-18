@@ -9,3 +9,4 @@ export * from './JobCategory.repository';
 export * from './Job.repository';
 export * from './savedJobs.repository';
 export * from './application.repository';
+export * from './report.repository';

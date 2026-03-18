@@ -2,13 +2,15 @@ import { Module } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
 import { DashboardController } from './dashboard.controller';
 import {
-  EmailModule,
   JobCategoryRepository,
+  NotificationRepository,
   SkillRepository,
   UserRepository,
   WorkTypeRepository,
 } from 'src/common';
+import { EmailModule } from 'src/common/Utils/services';
 import { UserDashboard } from './dashboardUser.service';
+import { notificationModel } from 'src/common/DB';
 
 @Module({
   controllers: [DashboardController],
@@ -19,7 +21,8 @@ import { UserDashboard } from './dashboardUser.service';
     UserRepository,
     JobCategoryRepository,
     UserDashboard,
+    NotificationRepository,
   ],
-  imports: [EmailModule],
+  imports: [EmailModule, notificationModel],
 })
 export class DashboardModule {}

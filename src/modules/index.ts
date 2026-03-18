@@ -6,5 +6,8 @@ export * from './workType/workType.module';
 export * from './dashboard/dashboard.module';
 export * from './job-Category/job-cat.module';
 export * from './job/job.module';
-export * from './savedJobs/savedJobs.module'
+export * from './savedJobs/savedJobs.module';
 export * from './application/application .module';
+export * from './Reports/report.module';
+export * from './AI/ai.module';
+export * from './notification/notification.module';

@@ -9,16 +9,17 @@ import {
 import {
   CompanyRepository,
   CryptoService,
-  EmailProducer,
-  emailType,
   HashingService,
   qualifyAge,
-  redis,
-  redisKeys,
-  Sys_Role,
-  TokenServices,
   UserRepository,
 } from 'src/common';
+import { emailType, Sys_Role } from 'src/common/Enum';
+import {
+  EmailProducer,
+  redis,
+  redisKeys,
+  TokenServices,
+} from 'src/common/Utils/services/index';
 import { ConfirmEmailDto, LoginDto, ResendOtpDto, signupDto } from './Dto';
 import { Request, Response } from 'express';
 

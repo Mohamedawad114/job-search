@@ -143,6 +143,7 @@ model Application{
   CV String
   status ApplicationStatus @default(pending)
   noticePeriod Int
+  Aireport AIReport?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   @@unique([userId,jobId])
@@ -161,11 +162,11 @@ model SavedJob{
   @@unique([userId,jobId])
 }
 model Skill{
-    id    Int    @id @default(autoincrement())
-    skill String @unique
-    userSkills UserSkill[]
-    jobSkills JobSkill[]
-     createdAt DateTime @default(now())
+  id    Int    @id @default(autoincrement())
+  skill String @unique
+  userSkills UserSkill[]
+  jobSkills JobSkill[]
+   createdAt DateTime @default(now())
 }
 model UserSkill{
     id    Int    @id @default(autoincrement())
@@ -195,7 +196,6 @@ model AIReport {
   strengths     String?
   weaknesses    String?
   decision      String?
-
   application   Application @relation(fields: [applicationId], references: [id])
   skillMatches  AISkillMatch[]
 

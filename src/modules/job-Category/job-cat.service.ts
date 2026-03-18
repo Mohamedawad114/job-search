@@ -12,6 +12,7 @@ export class JobCatService {
     const categories = await this.jobCatRepo.findAll({
       take: limit,
       skip: (page - 1) * limit,
+      orderBy: { createdAt: 'desc' },
     });
     const total = await this.jobCatRepo.count();
     return {

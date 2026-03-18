@@ -6,3 +6,7 @@ export * from './education.interface';
 export * from './experience.interface';
 export * from './userSkills.interface';
 export * from './application.interface';
+export * from './job.interface';
+export * from './AI.interfaces';
+export * from './notification.interface';
+export * from './chat.interface';

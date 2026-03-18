@@ -4,3 +4,4 @@ export * from './emailType.enum';
 export * from './education.enum';
 export * from './typeSearch.enum';
 export * from './application.enum';
+export * from './notification.enum';

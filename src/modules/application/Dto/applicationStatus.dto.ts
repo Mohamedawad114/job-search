@@ -1,8 +1,11 @@
-import { IsEnum, IsNotEmpty } from 'class-validator';
-import { ApplicationStatusEnum } from 'src/common';
+import { IsArray, IsNotEmpty, IsNumber, IsPositive } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class applicationStatus {
-  @IsEnum([ApplicationStatusEnum.ACCEPTED, ApplicationStatusEnum.REVIEWED])
+  @ApiProperty({ type: [Number] })
+  @IsArray({ each: true })
+  @IsNumber({})
+  @IsPositive({ each: true })
   @IsNotEmpty()
-  status: ApplicationStatusEnum;
+  applyIds: number[];
 }

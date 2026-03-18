@@ -1,19 +1,32 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import {
   ApplicationRepository,
-  ApplicationStatusEnum,
-  EmailProducer,
-  emailType,
+  IJob,
   IUser,
   JobRepository,
+  notificationHandler,
+  NotificationRepository,
+} from 'src/common';
+import {
+  AIPAnalysisProducer,
+  EmailProducer,
   redis,
   redisKeys,
-} from 'src/common';
+  rejectedApplicationsProducer,
+} from 'src/common/Utils/services/index';
+import {
+  Sys_Role,
+  emailType,
+  JobStatus,
+  ApplicationStatusEnum,
+  NotificationType,
+} from 'src/common/Enum';
 import { applicationStatus, createApplication } from './Dto';
 
 @Injectable()
@@ -22,6 +35,9 @@ export class ApplicationService {
     private readonly applicationRepository: ApplicationRepository,
     private readonly jobRepo: JobRepository,
     private readonly emailQueue: EmailProducer,
+    private readonly dbQueue: rejectedApplicationsProducer,
+    private readonly AiJobQueue: AIPAnalysisProducer,
+    private readonly NotificationRepo: NotificationRepository,
   ) {}
 
   apply = async (
@@ -30,42 +46,94 @@ export class ApplicationService {
     data: createApplication,
     idempotencyKey: string,
   ) => {
-    const isDuplicated = await redis.get(
+    const isNew = await redis.set(
       redisKeys.idempotencyKey(idempotencyKey, 'apply', user.id),
+      '1',
+      'EX',
+      60 * 5,
+      'NX',
     );
-    if (isDuplicated) throw new ConflictException('application already exists');
+    if (!isNew) throw new ConflictException('application already exists');
     const CV = data.CV ?? user.CV;
     if (!CV) throw new BadRequestException('cv must upload');
-    const isApplied = await this.applicationRepository.findOne({
-      userId: user.id,
-      jobId: jobId,
-    });
-    if (isApplied) throw new ConflictException('application already exists');
-    const application = await this.applicationRepository.create({
-      ...data,
-      CV: CV,
-      user: { connect: { id: user.id } },
-      job: { connect: { id: jobId } },
-    });
-    await redis.set(
-      redisKeys.idempotencyKey(idempotencyKey, 'apply', user.id),
-      'true',
-      'EX',
-      60 * 60 * 5,
-    );
-    return {
-      message: 'application created successfully',
-      data: application,
-    };
+    try {
+      const apply = await this.applicationRepository.transaction(async (tx) => {
+        const application = await tx.application.create({
+          data: {
+            ...data,
+            CV,
+            user: { connect: { id: user.id } },
+            job: { connect: { id: jobId } },
+          },
+        });
+        await tx.job.update({
+          where: { id: jobId },
+          data: { applicationCount: { increment: 1 } },
+        });
+        return application;
+      });
+      const stream = redis.scanStream({
+        match: redisKeys.JobApplication(jobId, '*', '*'),
+        count: 100,
+      });
+      stream.on('data', (keys) => {
+        if (keys.length > 0) {
+          redis.del(...keys);
+        }
+      });
+      await this.AiJobQueue.analysis(apply.id);
+      await this.dbQueue.changeJobStatus(jobId)
+      return {
+        message: 'application created successfully',
+        data: apply,
+      };
+    } catch (err) {
+      throw new ConflictException(`application not create ,err exist: ${err}`);
+    }
   };
-  getApply = async (user: IUser, applyId: number) => {
-    const application = await this.applicationRepository.findOne({
-      userId: user.id,
-      id: applyId,
+  getSpecApply = async (user: IUser, applyId: number) => {
+    const application = await this.applicationRepository.findById(applyId, {
+      select: {
+        id: true,
+        status: true,
+        CV: true,
+        createdAt: true,
+        noticePeriod: true,
+        city: true,
+        phone: true,
+        expectedSalary: true,
+        job: {
+          select: {
+            companyId: true,
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            CV: true,
+          },
+        },
+      },
     });
-    if (!application) throw new ConflictException('application not found');
+    if (user.role == Sys_Role.user) {
+      if (application.user.id !== user.id)
+        throw new NotFoundException('application not found');
+      return {
+        message: 'application details ',
+        data: application,
+      };
+    }
+    if (user.companyId !== application.job.companyId)
+      throw new ForbiddenException();
+    if (application.status == ApplicationStatusEnum.PENDING) {
+      await this.applicationRepository.updateById(applyId, {
+        status: ApplicationStatusEnum.REVIEWED,
+      });
+    }
     return {
-      message: 'application ',
+      message: 'application details ',
       data: application,
     };
   };
@@ -75,6 +143,7 @@ export class ApplicationService {
         where: { userId: user.id },
         skip: (page - 1) * limit,
         take: limit,
+        orderBy: { createdAt: 'desc' },
       }),
       this.applicationRepository.count({ where: { userId: user.id } }),
     ]);
@@ -93,6 +162,18 @@ export class ApplicationService {
     page: number,
     limit: number,
   ) => {
+    const cached = await redis.get(
+      redisKeys.JobApplication(jobId, page, limit),
+    );
+    if (cached) {
+      if (cached) {
+        const { applications, total } = JSON.parse(cached);
+        return {
+          data: applications,
+          meta: { total, pages: Math.ceil(total / limit) },
+        };
+      }
+    }
     const job = await this.jobRepo.findOne({
       id: jobId,
       companyId: user.companyId,
@@ -105,7 +186,7 @@ export class ApplicationService {
           user: {
             select: {
               id: true,
-              firstName: true,
+              name: true,
               email: true,
               CV: true,
             },
@@ -116,8 +197,16 @@ export class ApplicationService {
       }),
       this.applicationRepository.count({ where: { jobId: jobId } }),
     ]);
+    const cacheData = { applications, total };
+    await redis.set(
+      redisKeys.JobApplication(jobId, page, limit),
+      JSON.stringify(cacheData),
+      'EX',
+      60 * 60 * 12,
+    );
+
     return {
-      message: 'all applications ',
+      message: 'all job applications ',
       data: applications,
       meta: {
         total,
@@ -125,12 +214,19 @@ export class ApplicationService {
       },
     };
   };
-  changeApplicationStatus = async (
-    applyIds: number[],
-    status: applicationStatus,
+  acceptApplications = async (
+    jobId: number,
+    data: applicationStatus,
+    user: IUser,
   ) => {
+    const setOfApplyIds = Array.from(new Set(data.applyIds));
+    const job = await this.jobRepo.findOne({
+      id: jobId,
+      companyId: user.companyId,
+    });
+    if (!job) throw new NotFoundException('job not found | forbidden');
     const applications = await this.applicationRepository.findAll({
-      where: { id: { in: applyIds } },
+      where: { id: { in: setOfApplyIds }, jobId: jobId },
       include: {
         user: {
           select: {
@@ -149,36 +245,38 @@ export class ApplicationService {
         },
       },
     });
-    if (applications.length !== applyIds.length)
+    if (applications.length !== setOfApplyIds.length)
       throw new NotFoundException('application not found');
+    const updatedApplication = await this.applicationRepository.updateMany(
+      { id: { in: setOfApplyIds }, jobId: jobId },
+      {
+        status: ApplicationStatusEnum.ACCEPTED,
+      },
+    );
+    applications.maps(async (app) => {
+      const { title, content } = notificationHandler(
+        NotificationType.JOB_ACCEPTED,
+        { jobTitle: app.job.position, companyName: app.job.company.name },
+      );
+      const Notifications = await this.NotificationRepo.insert({
+        userId: app.userId,
+        title: title,
+        content: content,
+      });
+      //socket
+    });
+
+    await this.dbQueue.sendRejectedApplications(setOfApplyIds, jobId);
     await Promise.all(
       applications.map((app) =>
         this.emailQueue.sendEmailJob(
           emailType.applicationStatus,
           app.user.email,
-          app.jop.company.name,
+          app.job.company.name,
           app.job.position,
-          ApplicationStatusEnum.ACCEPTED,
         ),
       ),
     );
-
-    const [updatedApplication] = await Promise.all([
-      this.applicationRepository.updateMany(
-        { id: { in: applyIds } },
-        {
-          status: status,
-        },
-      ),
-      this.applicationRepository.updateMany(
-        {
-          id: { nin: applyIds },
-        },
-        {
-          status: ApplicationStatusEnum.REJECTED,
-        },
-      ),
-    ]);
     return {
       message: 'application status updated successfully',
       data: updatedApplication,

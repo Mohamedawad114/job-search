@@ -13,7 +13,9 @@ import {
   Query,
 } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
-import { Auth, AuthUser, type IUser, Sys_Role, TypeSearch } from 'src/common';
+import { type IUser } from 'src/common';
+import { Sys_Role } from 'src/common/Enum';
+import { Auth, AuthUser }from 'src/common/decorator'
 import {
   changeRoleDto,
   CreateJobCatDto,
@@ -29,7 +31,9 @@ import {
   ApiParam,
   ApiQuery,
   ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
+@ApiTags('Dashboard')
 @Auth(Sys_Role.admin)
 @Controller('api/dashboard')
 export class DashboardController {

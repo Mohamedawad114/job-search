@@ -11,7 +11,8 @@ import {
   Patch,
 } from '@nestjs/common';
 import { Sys_Role } from '@prisma/client';
-import { Auth, AuthUser, type IUser } from 'src/common';
+import { type IUser } from 'src/common';
+import { Auth, AuthUser }from 'src/common/decorator'
 import { ProfileServices } from './profile.service';
 import {
   AddEducationDto,

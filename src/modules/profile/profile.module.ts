@@ -6,14 +6,13 @@ import {
   CompanyRepository,
   CryptoService,
   EducationRepository,
-  EmailModule,
   ExperienceRepository,
   HashingService,
-  s3_services,
   SkillRepository,
   UserRepository,
   UserSkillRepository,
 } from 'src/common';
+import { EmailModule, s3_services } from 'src/common/Utils/services';
 
 @Module({
   imports: [EmailModule],

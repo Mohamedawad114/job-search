@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Queue } from 'bullmq';
 import { InjectQueue } from '@nestjs/bullmq';
+import { ApplicationStatusEnum } from 'src/common/Enum';
 
 @Injectable()
 export class EmailProducer {
@@ -10,7 +11,6 @@ export class EmailProducer {
     to: string,
     companyName?: string,
     jobName?: string,
-    status?: string,
   ) => {
     await this.emailQueue.add(
       type,
@@ -18,7 +18,7 @@ export class EmailProducer {
         to,
         companyName,
         jobName,
-        status,
+        status: ApplicationStatusEnum.ACCEPTED,
       },
       {
         attempts: 3,

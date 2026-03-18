@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 import {
   CompanyRepository,
@@ -8,6 +12,11 @@ import {
   JobStatus,
 } from 'src/common';
 import { ChangeStatus, CreateJobDto, SearchDto, UpdateJobDto } from './dto';
+import {
+  redis,
+  redisKeys,
+  rejectedApplicationsProducer,
+} from 'src/common/Utils/services';
 
 @Injectable()
 export class JobService {
@@ -15,16 +24,43 @@ export class JobService {
     private readonly companyRepo: CompanyRepository,
     private readonly jobRepo: JobRepository,
     private readonly jobCatRepo: JobCategoryRepository,
+    private readonly dbQueue: rejectedApplicationsProducer,
   ) {}
+  private async invalidateJobCache(companyId: number) {
+    const deletePatterns = [
+      redisKeys.companyJobs(companyId, '*', '*'),
+      redisKeys.allJobs('*', '*'),
+    ];
+
+    for (const pattern of deletePatterns) {
+      const stream = redis.scanStream({ match: pattern, count: 100 });
+      stream.on('data', (keys) => {
+        if (keys.length > 0) redis.del(...keys);
+      });
+      stream.on('error', (err) => {
+        console.error(`Cache invalidation error for pattern ${pattern}:`, err);
+      });
+    }
+  }
   createJob = async (user: IUser, data: CreateJobDto) => {
-    const company = await this.companyRepo.findOne({ adminId: user.id });
+    const company = await this.companyRepo.findOne(
+      { adminId: user.id },
+      {
+        select: { name: true, id: true },
+      },
+    );
     if (!company) throw new NotFoundException('company not found');
-    const category = await this.jobCatRepo.findById(data.categoryId);
+    const category = await this.jobCatRepo.findById(data.categoryId, {
+      select: { id: true },
+    });
     if (!category) throw new NotFoundException('category not found');
     const jobCreated = await this.jobRepo.transaction(async (tx) => {
       const skillIds = data.skills.map((s) => s.skillId);
       const skillRecords = await tx.skill.findMany({
         where: { id: { in: skillIds } },
+        select: {
+          id: true,
+        },
       });
       if (skillRecords.length !== skillIds.length)
         throw new NotFoundException('Some skills not found');
@@ -36,10 +72,11 @@ export class JobService {
           location: data.location,
           company: { connect: { id: company.id } },
           category: { connect: { id: data.categoryId } },
+          maxNumApplication: data.maxNumApplication,
         },
       });
       await tx.jobSkill.createMany({
-        data: data.skills.map((s, i) => ({
+        data: data.skills.map((s) => ({
           jobId: job.id,
           skillId: s.skillId,
           level: s.level,
@@ -51,6 +88,9 @@ export class JobService {
       });
       return jobWithSkills;
     });
+    if (!jobCreated) throw new BadRequestException('some thing wrong');
+    await this.invalidateJobCache(company.id);
+    await this.dbQueue.JobPosted(company.name, jobCreated?.position);
     return { message: 'job posted ', data: jobCreated };
   };
   updateJob = async (user: IUser, jobId: number, Dto: UpdateJobDto) => {
@@ -64,14 +104,12 @@ export class JobService {
     const updatedJob = await this.jobRepo.transaction(async (tx) => {
       if (Dto.skills) {
         const skillIds = Dto.skills.map((s) => s.skillId);
-
         const skillRecords = await tx.skill.findMany({
           where: { id: { in: skillIds } },
+          select: { id: true },
         });
-
         if (skillRecords.length !== skillIds.length)
           throw new NotFoundException('Some skills not found');
-
         await tx.jobSkill.createMany({
           data: Dto.skills.map((s) => ({
             jobId: jobId,
@@ -109,6 +147,7 @@ export class JobService {
 
       return job;
     });
+    await this.invalidateJobCache(company.id);
     return {
       message: 'job updated successfully',
       data: updatedJob,
@@ -119,33 +158,53 @@ export class JobService {
     jobId: number,
     status: ChangeStatus,
   ) => {
-    const company = await this.companyRepo.findOne({ adminId: user.id });
-    if (!company) throw new NotFoundException('company not found');
-    const job = await this.jobRepo.findOne({
-      id: jobId,
-      companyId: company.id,
-    });
+    const job = await this.jobRepo.findOne(
+      {
+        id: jobId,
+        company: { adminId: user.id },
+      },
+      {
+        select: {
+          companyId: true,
+        },
+      },
+    );
     if (!job) throw new NotFoundException('job not found');
     const updated = await this.jobRepo.update(
       {
         id: jobId,
-        companyId: company.id,
       },
       { status: status.status },
     );
+    await this.invalidateJobCache(job.companyId);
     return { message: 'job status updated', data: updated };
   };
-
   getJobDetails = async (jobId: number) => {
+    const cached = await redis.get(redisKeys.jobDetails(jobId));
+    if (cached) return { message: 'job Details', data: JSON.parse(cached) };
     const job = await this.jobRepo.findById(jobId, {
       include: {
         skills: true,
       },
     });
     if (!job) throw new NotFoundException('job not found');
+    await redis.set(
+      redisKeys.jobDetails(jobId),
+      JSON.stringify(job),
+      'EX',
+      60 * 60 * 12,
+    );
     return { message: 'job Details', data: job };
   };
   searchJobs = async (filter: SearchDto, limit: number, page: number) => {
+    const cached = await redis.get(redisKeys.allJobs(page, limit, filter));
+    if (cached) {
+      const { jobs, total } = JSON.parse(cached);
+      return {
+        data: jobs,
+        meta: { total, pages: Math.ceil(total / limit) },
+      };
+    }
     const offset = (page - 1) * limit;
     const where: any = {
       status: JobStatus.open,
@@ -170,6 +229,12 @@ export class JobService {
       this.jobRepo.count({ where }),
     ]);
     if (!jobs.length) return { message: 'no jobs found ' };
+    await redis.set(
+      redisKeys.allJobs(page, limit, filter),
+      JSON.stringify({ jobs, total }),
+      'EX',
+      60 * 60 * 12,
+    );
     return {
       message: 'jobs found',
       data: jobs,
@@ -177,6 +242,14 @@ export class JobService {
     };
   };
   AllJobs = async (page: number, limit: number) => {
+    const cached = await redis.get(redisKeys.allJobs(page, limit));
+    if (cached) {
+      const { jobs, total } = JSON.parse(cached);
+      return {
+        data: jobs,
+        meta: { total, pages: Math.ceil(total / limit) },
+      };
+    }
     const offset = (page - 1) * limit;
     const [jobs, total] = await Promise.all([
       this.jobRepo.findAll({
@@ -190,6 +263,12 @@ export class JobService {
       }),
     ]);
     if (!jobs.length) return { message: 'no jobs found ' };
+    await redis.set(
+      redisKeys.allJobs(page, limit),
+      JSON.stringify({ jobs, total }),
+      'EX',
+      60 * 60 * 12,
+    );
     return {
       message: 'jobs found',
       data: jobs,

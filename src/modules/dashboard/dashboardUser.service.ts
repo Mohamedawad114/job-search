@@ -1,12 +1,20 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { EmailProducer, emailType, redis, UserRepository } from 'src/common';
+import {
+  emailType,
+  notificationHandler,
+  NotificationRepository,
+  NotificationType,
+  UserRepository,
+} from 'src/common';
 import { changeRoleDto } from './Dto';
+import { EmailProducer, redis } from 'src/common/Utils/services';
 
 @Injectable()
 export class UserDashboard {
   constructor(
     private readonly userRepo: UserRepository,
     private readonly emailQueue: EmailProducer,
+    private readonly NotificationRepo: NotificationRepository,
   ) {}
   BanUser = async (userId: number) => {
     const User = await this.userRepo.findById(userId);
@@ -57,6 +65,17 @@ export class UserDashboard {
     const User = await this.userRepo.findById(userId);
     if (!User) throw new NotFoundException('user not found');
     await this.userRepo.updateById(User.id, { role: data.role });
+    const { title, content } = notificationHandler(
+      NotificationType.ROLE_CHANGED_TO_ADMIN,
+      {},
+    );
+    const Notifications = await this.NotificationRepo.insert({
+      userId: userId,
+      title: title,
+      content: content,
+    });
+    //socket
+
     return {
       message: 'user role updated',
     };

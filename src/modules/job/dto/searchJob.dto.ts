@@ -6,20 +6,28 @@ import {
   IsPositive,
   IsString,
 } from 'class-validator';
-import { jobType, Location } from 'src/common';
+import { jobType, Location } from 'src/common/Enum';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class SearchDto {
+  @ApiPropertyOptional({ enum: Location })
   @IsEnum(Location)
   @IsOptional()
   location?: Location;
+
+  @ApiPropertyOptional({ enum: jobType })
   @IsEnum(jobType)
   @IsOptional()
   type?: jobType;
-  @IsArray({ each: true })
-  @IsNumber()
+
+  @ApiPropertyOptional({ type: [Number] })
+  @IsArray()
+  @IsNumber({}, { each: true })
   @IsPositive({ each: true })
   @IsOptional()
-  skills?: string[];
+  skills?: number[];
+
+  @ApiPropertyOptional()
   @IsString()
   @IsOptional()
   search?: string;

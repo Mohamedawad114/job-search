@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty } from "class-validator";
-import { Sys_Role } from "src/common";
+import { Sys_Role } from "src/common/Enum";
 
 export class changeRoleDto{
     @IsEnum(Sys_Role)

@@ -7,7 +7,9 @@ import {
   ParseIntPipe,
   Query,
 } from '@nestjs/common';
-import { Auth, AuthUser, type IUser, Sys_Role } from 'src/common';
+import { type IUser } from 'src/common';
+import { Sys_Role}from 'src/common/Enum'
+import { Auth, AuthUser }from 'src/common/decorator'
 import { CompanyService } from './company.service';
 import {
   ApiNotFoundResponse,

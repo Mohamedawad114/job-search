@@ -8,11 +8,9 @@ import {
   CompanyRepository,
   CryptoService,
   EducationRepository,
-  EmailProducer,
   emailType,
   ExperienceRepository,
   IUser,
-  s3_services,
   SkillRepository,
   Sys_Role,
   UserRepository,
@@ -27,6 +25,7 @@ import {
   AddUserSkill,
   UpdateUserSkill,
 } from './Dto';
+import { EmailProducer, s3_services } from 'src/common/Utils/services';
 
 @Injectable()
 export class ProfileServices {

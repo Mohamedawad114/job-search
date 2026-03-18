@@ -8,12 +8,16 @@ import {
   CompanyRepository,
   IUser,
   JobRepository,
-  MapsProducer,
-  s3_services,
-  Sys_Role,
   UserRepository,
   WorkTypeRepository,
 } from 'src/common';
+import { Sys_Role } from 'src/common/Enum';
+import {
+  MapsProducer,
+  redis,
+  redisKeys,
+  s3_services,
+} from 'src/common/Utils/services';
 import {
   ChangeAdminCompany,
   CreateCompanyDto,
@@ -56,6 +60,10 @@ export class CompanyService {
     };
   };
   getAllCompanies = async (page: number, limit: number) => {
+    const cached = await redis.get(redisKeys.allCompanies(page, limit));
+    if (cached) {
+      return { data: JSON.parse(cached) };
+    }
     const offset = (page - 1) * limit;
     const companies = await this.companyRepo.findAll({
       select: {
@@ -69,6 +77,12 @@ export class CompanyService {
       skip: offset,
     });
     if (!companies.length) throw new NotFoundException(' no companies found');
+    await redis.set(
+      redisKeys.allCompanies(page, limit),
+      JSON.stringify(companies),
+      'EX',
+      60 * 60 * 12,
+    );
     return {
       message: 'companies',
       data: companies,
@@ -98,6 +112,15 @@ export class CompanyService {
       role: Sys_Role.company_admin,
       company: { connect: { id: created.id } },
       ownedCompany: { connect: { id: created.id } },
+    });
+    const stream = redis.scanStream({
+      match: redisKeys.allCompanies('*', '*'),
+      count: 100,
+    });
+    stream.on('data', (keys) => {
+      if (keys.length > 0) {
+        redis.del(...keys);
+      }
     });
     return {
       message: 'company account created',
@@ -162,6 +185,15 @@ export class CompanyService {
         : undefined,
     };
     const updated = await this.companyRepo.update({ adminId: user.id }, data);
+    const stream = redis.scanStream({
+      match: redisKeys.allCompanies('*', '*'),
+      count: 100,
+    });
+    stream.on('data', (keys) => {
+      if (keys.length > 0) {
+        redis.del(...keys);
+      }
+    });
     return {
       message: 'company account updated',
       data: updated,
@@ -196,6 +228,10 @@ export class CompanyService {
   };
   search = async (search: string, page: number, limit: number) => {
     if (!search) throw new BadRequestException('search is required');
+    const cached = await redis.get(redisKeys.allCompanies(page, limit, search));
+    if (cached) {
+      return { data: JSON.parse(cached) };
+    }
     const offset = (page - 1) * limit;
     const companies = await this.companyRepo.findAll({
       where: {
@@ -218,12 +254,24 @@ export class CompanyService {
       skip: offset,
       take: limit,
     });
+    await redis.set(
+      redisKeys.allCompanies(page, limit, search),
+      JSON.stringify(companies),
+      'EX',
+      60 * 60 * 12,
+    );
     return {
       message: 'companies found',
       data: companies,
     };
   };
   companyJobs = async (companyId: number, page: number, limit: number) => {
+    const cached = await redis.get(
+      redisKeys.companyJobs(companyId, page, limit),
+    );
+    if (cached) {
+      return { data: JSON.parse(cached) };
+    }
     const company = await this.companyRepo.findById(companyId);
     if (!company) throw new NotFoundException('company not found');
     const offset = (page - 1) * limit;
@@ -235,6 +283,12 @@ export class CompanyService {
     });
     if (!companyJobs.length)
       return { message: 'no jobs found no jobs found for this company' };
+    await redis.set(
+      redisKeys.companyJobs(companyId, page, limit),
+      JSON.stringify(companyJobs),
+      'EX',
+      60 * 60 * 12,
+    );
     return {
       message: 'jobs found',
       data: companyJobs,

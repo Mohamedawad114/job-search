@@ -7,12 +7,14 @@ import {
 import {
   IUser,
   JobCategoryRepository,
-  redis,
-  redisKeys,
   SkillRepository,
   TypeSearch,
   WorkTypeRepository,
 } from 'src/common';
+import {
+  redis,
+  redisKeys,
+} from 'src/common/Utils/services/index';
 import {
   CreateJobCatDto,
   CreateSkillDto,

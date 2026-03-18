@@ -96,12 +96,7 @@ export class EmailServices implements EmailData {
     jobName: string,
     status: ApplicationStatusEnum,
   ) => {
-    const statusColor =
-      status === ApplicationStatusEnum.ACCEPTED||ApplicationStatusEnum.REVIEWED
-        ? '#16a34a'
-        : status === ApplicationStatusEnum.REJECTED
-          ? '#dc2626'
-          : '#2563eb';
+    const statusColor = '#16a34a';
     const html = `
   <div style="font-family: Arial, sans-serif; background:#f4f4f4; padding:40px;">
     <div style="max-width:600px; margin:auto; background:white; padding:30px; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.1);">

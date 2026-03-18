@@ -1,5 +1,5 @@
-import { IsEnum, IsNotEmpty, IsOptional } from 'class-validator';
-import { TypeSearch } from 'src/common';
+import { IsEnum, IsNotEmpty } from 'class-validator';
+import { TypeSearch } from 'src/common/Enum';
 
 export class DataFilterDto {
   @IsEnum(TypeSearch)

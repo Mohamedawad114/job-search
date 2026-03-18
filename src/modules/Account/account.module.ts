@@ -1,10 +1,6 @@
 import { Module } from '@nestjs/common';
-import {
-  EmailModule,
-  HashingService,
-  s3_services,
-  UserRepository,
-} from 'src/common';
+import { HashingService, UserRepository } from 'src/common';
+import { EmailModule, s3_services } from 'src/common/Utils/services/index';
 import { AccountController } from './account.controller';
 import { AccountServices } from './account.service';
 

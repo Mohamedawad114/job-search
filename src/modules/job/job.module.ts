@@ -6,6 +6,7 @@ import {
   JobCategoryRepository,
   JobRepository,
 } from 'src/common';
+import { rejectedApplicationsModule } from 'src/common/Utils/services';
 
 @Module({
   controllers: [JobController],
@@ -15,5 +16,6 @@ import {
     JobCategoryRepository,
     CompanyRepository,
   ],
+  imports: [rejectedApplicationsModule],
 })
 export class JobModule {}

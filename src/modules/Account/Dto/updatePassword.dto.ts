@@ -1,7 +1,9 @@
 import { IsNotEmpty, IsString, Length, Matches } from 'class-validator';
-import { Match } from 'src/common';
+import { Match } from 'src/common/decorator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class updatePasswordDto {
+  @ApiProperty()
   @IsString()
   @Length(8, 64)
   @IsNotEmpty()
@@ -13,6 +15,8 @@ export class updatePasswordDto {
     },
   )
   oldPassword: string;
+
+  @ApiProperty()
   @IsString()
   @Length(8, 64)
   @IsNotEmpty()
@@ -24,6 +28,8 @@ export class updatePasswordDto {
     },
   )
   newPassword: string;
+
+  @ApiProperty()
   @IsString()
   @Length(8, 64)
   @IsNotEmpty()

@@ -1,7 +1,7 @@
 import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';
 import { EmailProducer } from './email.producer';
-import { EmailWorker } from './email.processer';
+import { EmailWorker } from './email.processor';
 import { MailModule } from '../../mailService/mail.module';
 
 @Module({

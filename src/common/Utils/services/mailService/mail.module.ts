@@ -6,7 +6,7 @@ import { HashingService } from '../../Hashing/hash.service';
 
 @Module({
   imports: [
-    ConfigModule, 
+    ConfigModule,
     MailerModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({

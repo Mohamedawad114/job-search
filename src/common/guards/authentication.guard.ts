@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { redis, redisKeys, TokenServices } from '../Utils';
+import { redis, redisKeys, TokenServices } from '../Utils/services/index';
 import { UserRepository } from '../Repositories';
 @Injectable()
 export class AuthGuard implements CanActivate {

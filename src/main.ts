@@ -15,7 +15,6 @@ async function bootstrap() {
     renameContext: 'nestContext',
   });
 
-  /// findone بتاعت الداشبورد وعمل migrate ++ createdAt in schema
 
   app.use(helmet(), hpp(), cookieParser());
   app.useGlobalPipes(

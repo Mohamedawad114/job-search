@@ -1,5 +1,5 @@
 import { IsEnum, IsOptional } from 'class-validator';
-import { skillsLevel } from 'src/common';
+import { skillsLevel } from 'src/common/Enum';
 
 export class UpdateUserSkill {
     @IsEnum(skillsLevel)

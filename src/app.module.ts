@@ -6,15 +6,19 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { BullModule } from '@nestjs/bullmq';
 import { LoggerModule } from 'nestjs-pino';
 import { resolve } from 'path';
+import { MongooseModule } from '@nestjs/mongoose';
 import {
   CommonModule,
-  EmailModule,
   GlobalErrFilter,
-  redis,
   ResponseInterceptor,
   TimeoutInterceptor,
   UserRepository,
 } from './common';
+import {
+  EmailModule,
+  redis,
+  rejectedApplicationsModule,
+} from './common/Utils/services/index';
 import {
   AccountModule,
   AuthModule,
@@ -25,6 +29,10 @@ import {
   WorkTypeModule,
   JobModule,
   SavedJobModule,
+  ApplicationModule,
+  ReportModule,
+  AIModule,
+  NotificationModule,
 } from './modules';
 import { PrismaModule } from './prisma/prisma.module';
 
@@ -33,6 +41,9 @@ import { PrismaModule } from './prisma/prisma.module';
     ConfigModule.forRoot({
       envFilePath: resolve('config/dev.env'),
       isGlobal: true,
+    }),
+    MongooseModule.forRoot(process.env.DB_URI_MONGO as string, {
+      serverSelectionTimeoutMS: 30000,
     }),
     ThrottlerModule.forRoot([
       {
@@ -56,6 +67,7 @@ import { PrismaModule } from './prisma/prisma.module';
       },
     }),
     EmailModule,
+    rejectedApplicationsModule,
     CommonModule,
     PrismaModule,
     AuthModule,
@@ -67,6 +79,10 @@ import { PrismaModule } from './prisma/prisma.module';
     JobModule,
     JobCatModule,
     SavedJobModule,
+    ApplicationModule,
+    AIModule,
+    ReportModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [

@@ -8,4 +8,20 @@ export const redisKeys = {
     `dataForAdmin:${type}:${page}:${limit}`,
   idempotencyKey: (key: string, op: string, id: number) =>
     `idempotencyKey:${key}:${op}:${id}`,
+  JobApplication: (jobId: number, page: number | '*', limit: number | '*') =>
+    `jobApplications:${jobId}:page:${page}:limit:${limit}`,
+  allCompanies: (
+    page: number | '*',
+    limit: number | '*',
+    search?: string | '*',
+  ) => `allCompanies:search:${search}:page${page}:limit:${limit}`,
+  companyJobs: (companyId: number, page: number | '*', limit: number | '*') =>
+    `allCompanyJobs:companyId:${companyId}:page${page}:limit:${limit}`,
+  allJobs: (page: number | '*', limit: number | '*', filter?: object | '*') =>
+    `allJObs:search:${filter}:page${page}:limit:${limit}`,
+  allJobReports: (jobId: number, page: number | '*', limit: number | '*') =>
+    `allJobsReports:job_${jobId}:page${page}:limit:${limit}`,
+  jobDetails: (jobId: number) => `jobDetails:${jobId}`,
+  notification: (userId: number, page: number | '*', limit: number | '*') =>
+    `notifications:userId:${userId}:page${page}:limit:${limit}`,
 };

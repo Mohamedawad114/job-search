@@ -3,11 +3,10 @@ import { AuthService } from './auth.service';
 import {
   CompanyRepository,
   CryptoService,
-  EmailModule,
   HashingService,
-  MailModule,
   UserRepository,
 } from 'src/common';
+import { EmailModule, MailModule } from 'src/common/Utils/services/index';
 import { AuthController } from './auth.controller';
 
 @Module({

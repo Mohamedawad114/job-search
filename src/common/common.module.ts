@@ -1,5 +1,5 @@
 import { Global, Module } from "@nestjs/common";
-import { TokenModule } from "./Utils";
+import { TokenModule } from "./Utils/services/index";
 import { UserRepository } from "./Repositories";
 
 @Global()

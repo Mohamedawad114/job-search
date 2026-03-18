@@ -1,8 +1,10 @@
-import { IsNotEmpty, IsNumber, IsPositive } from "class-validator";
+import { IsNotEmpty, IsNumber, IsPositive } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
-export class ChangeAdminCompany{
-    @IsNumber()
-    @IsPositive()
-        @IsNotEmpty()
-    userId:number
+export class ChangeAdminCompany {
+  @ApiProperty()
+  @IsNumber()
+  @IsPositive()
+  @IsNotEmpty()
+  userId: number;
 }

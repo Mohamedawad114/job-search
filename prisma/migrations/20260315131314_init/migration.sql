@@ -82,7 +82,9 @@ CREATE TABLE `Company` (
 CREATE TABLE `WorkType` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
+    UNIQUE INDEX `WorkType_name_key`(`name`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -91,7 +93,9 @@ CREATE TABLE `JobCategory` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
     `description` VARCHAR(191) NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
+    UNIQUE INDEX `JobCategory_name_key`(`name`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -123,6 +127,7 @@ CREATE TABLE `Application` (
     `userId` INTEGER NOT NULL,
     `jobId` INTEGER NOT NULL,
     `CV` VARCHAR(191) NOT NULL,
+    `status` ENUM('pending', 'reviewed', 'accept', 'rejected') NOT NULL DEFAULT 'pending',
     `noticePeriod` INTEGER NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
@@ -149,6 +154,7 @@ CREATE TABLE `SavedJob` (
 CREATE TABLE `Skill` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `skill` VARCHAR(191) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     UNIQUE INDEX `Skill_skill_key`(`skill`),
     PRIMARY KEY (`id`)
@@ -175,6 +181,33 @@ CREATE TABLE `JobSkill` (
 
     INDEX `JobSkill_jobId_idx`(`jobId`),
     UNIQUE INDEX `JobSkill_jobId_skillId_key`(`jobId`, `skillId`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `AIReport` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `applicationId` INTEGER NOT NULL,
+    `ATSScore` DOUBLE NULL,
+    `summary` VARCHAR(191) NULL,
+    `strengths` VARCHAR(191) NULL,
+    `weaknesses` VARCHAR(191) NULL,
+    `decision` VARCHAR(191) NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    UNIQUE INDEX `AIReport_applicationId_key`(`applicationId`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `AISkillMatch` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `reportId` INTEGER NOT NULL,
+    `skillName` VARCHAR(191) NOT NULL,
+    `matchScore` DOUBLE NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -222,3 +255,9 @@ ALTER TABLE `JobSkill` ADD CONSTRAINT `JobSkill_skillId_fkey` FOREIGN KEY (`skil
 
 -- AddForeignKey
 ALTER TABLE `JobSkill` ADD CONSTRAINT `JobSkill_jobId_fkey` FOREIGN KEY (`jobId`) REFERENCES `Job`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `AIReport` ADD CONSTRAINT `AIReport_applicationId_fkey` FOREIGN KEY (`applicationId`) REFERENCES `Application`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `AISkillMatch` ADD CONSTRAINT `AISkillMatch_reportId_fkey` FOREIGN KEY (`reportId`) REFERENCES `AIReport`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

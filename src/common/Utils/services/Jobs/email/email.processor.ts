@@ -27,7 +27,12 @@ export class EmailWorker extends WorkerHost {
         break;
       case emailType.applicationStatus:
         const { companyName, jobName, status } = job.data;
-        await this.emailServices.ApprovalCompany_email(to, companyName, jobName, status);
+        await this.emailServices.ApprovalCompany_email(
+          to,
+          companyName,
+          jobName,
+          status,
+        );
         break;
       default:
         this.logger.warn(`Unknown job type: ${job.name}`);
