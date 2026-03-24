@@ -118,51 +118,94 @@ job-search
 
 │   └── swagger.ts
 
+
 │
 ├── prisma/
+
 │   ├── migrations/
+
 │   └── schema.prisma
+
 │
 ├── src/
+
 │   ├── common/
+
 │   │   ├── DB/                # Mongo models (chat, notification)
+
 │   │   ├── Enum/
+
 │   │   ├── Interfaces/
+
 │   │   ├── Repositories/
+
 │   │   │   ├── mongo/
+
 │   │   │   └── prisma/
+
 │   │   ├── Utils/
+
 │   │   │   ├── hashing/
+
 │   │   │   ├── crypto/
+
 │   │   │   ├── redis/
+
 │   │   │   ├── tokens/
+
 │   │   │   ├── mail/
+
 │   │   │   ├── s3/
+
 │   │   │   └── jobs/         # BullMQ (AI, email, db, maps)
+
 │   │   ├── decorators/
+
 │   │   ├── guards/
+
 │   │   ├── interceptors/
+
 │   │   ├── middlewares/
+
 │   │   └── helpers/
+
 │   │
 │   ├── modules/
+
 │   │   ├── auth/
+
 │   │   ├── account/
+
 │   │   ├── profile/
+
 │   │   ├── company/
+
 │   │   ├── job/
+
 │   │   ├── application/
+
 │   │   ├── savedJobs/
+
 │   │   ├── notification/
+
 │   │   ├── workType/
+
 │   │   ├── job-category/
+
 │   │   ├── dashboard/
+
 │   │   ├── reports/
+
 │   │   └── AI/
+
 │   │
 │   ├── prisma/
+
 │   │   ├── prisma.module.ts
+
 │   │   └── prisma.service.ts
+
+
 │   │
 │   └── main.ts
 │
