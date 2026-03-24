@@ -33,8 +33,11 @@ import {
   ReportModule,
   AIModule,
   NotificationModule,
+  GatewayModule,
+  ChatModule,
 } from './modules';
 import { PrismaModule } from './prisma/prisma.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -53,6 +56,7 @@ import { PrismaModule } from './prisma/prisma.module';
     ]),
     BullModule.forRoot({
       connection: redis,
+      
     }),
     LoggerModule.forRoot({
       pinoHttp: {
@@ -66,6 +70,7 @@ import { PrismaModule } from './prisma/prisma.module';
         },
       },
     }),
+    EventEmitterModule.forRoot(),
     EmailModule,
     rejectedApplicationsModule,
     CommonModule,
@@ -83,6 +88,8 @@ import { PrismaModule } from './prisma/prisma.module';
     AIModule,
     ReportModule,
     NotificationModule,
+    GatewayModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [

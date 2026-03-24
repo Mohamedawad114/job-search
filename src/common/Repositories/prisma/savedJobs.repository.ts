@@ -11,4 +11,10 @@ export class SavedJobRepository extends BaseRepository<
   constructor(protected readonly prisma: PrismaService) {
     super(prisma, prisma.savedJob);
   }
+  async findOneSavedJob(filter: object, options?: any) {
+    return this.model.findFirst({
+      where: filter,
+      ...options,
+    });
+  }
 }

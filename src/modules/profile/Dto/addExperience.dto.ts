@@ -19,7 +19,7 @@ export class AddExperienceDto implements IExperience {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  @Length(5, 12)
+  @Length(5, 24)
   position: string;
 
   @ApiProperty()

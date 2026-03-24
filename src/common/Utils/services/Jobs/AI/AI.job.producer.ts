@@ -12,7 +12,7 @@ export class AIPAnalysisProducer {
         applicationId: applicationId,
       },
       {
-        attempts: 3,
+        attempts: 1,
         removeOnFail: false,
         removeOnComplete: true,
       },

@@ -25,11 +25,11 @@ import {
 @ApiTags('Saved Jobs')
 @ApiBearerAuth()
 @Auth(Sys_Role.user, Sys_Role.company_admin)
-@Controller('api/saved-jobs')
+@Controller('saved-jobs')
 export class SavedJobController {
   constructor(private readonly savedJobService: SavedJobService) {}
 
-  @Post('save/:id')
+  @Post('/:id')
   @ApiOperation({ summary: 'Save a job for the authenticated user' })
   @ApiParam({ name: 'id', type: Number, description: 'Job ID to save' })
   @ApiResponse({ status: 201, description: 'Job saved successfully' })
@@ -37,7 +37,7 @@ export class SavedJobController {
     return this.savedJobService.addToSavedJobs(jobId, user);
   }
 
-  @Get('saved-jobs')
+  @Get('all')
   @ApiOperation({ summary: 'Get saved jobs for the authenticated user' })
   @ApiQuery({ name: 'page', type: Number, required: false, example: 1 })
   @ApiQuery({ name: 'limit', type: Number, required: false, example: 10 })
@@ -50,11 +50,11 @@ export class SavedJobController {
     return this.savedJobService.mySavedJobs(user, page, limit);
   }
 
-  @Delete('save/:id')
+  @Delete('/:id')
   @ApiOperation({ summary: 'Remove a saved job for the authenticated user' })
   @ApiParam({ name: 'id', type: Number, description: 'Job ID to remove' })
   @ApiResponse({ status: 200, description: 'Job removed from saved jobs' })
-  deleteSavedJob(@Param('id') jobId: number, @AuthUser() user: IUser) {
+  deleteSavedJob(@Param('id',ParseIntPipe) jobId: number, @AuthUser() user: IUser) {
     return this.savedJobService.removeFromSavedJobs(jobId, user);
   }
 }

@@ -18,8 +18,9 @@ async function bootstrap() {
 
   app.use(helmet(), hpp(), cookieParser());
   app.useGlobalPipes(
-    new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
+    new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true,transform:true }),
   );
+  app.setGlobalPrefix('api');
   const Doc = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, Doc);
   logger.info(`server is running... on 3000`);

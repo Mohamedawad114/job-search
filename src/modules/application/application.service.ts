@@ -7,7 +7,6 @@ import {
 } from '@nestjs/common';
 import {
   ApplicationRepository,
-  IJob,
   IUser,
   JobRepository,
   notificationHandler,
@@ -28,6 +27,7 @@ import {
   NotificationType,
 } from 'src/common/Enum';
 import { applicationStatus, createApplication } from './Dto';
+import { Gateway } from '../gateway/gateway';
 
 @Injectable()
 export class ApplicationService {
@@ -38,6 +38,7 @@ export class ApplicationService {
     private readonly dbQueue: rejectedApplicationsProducer,
     private readonly AiJobQueue: AIPAnalysisProducer,
     private readonly NotificationRepo: NotificationRepository,
+    private readonly SocketGateway: Gateway,
   ) {}
 
   apply = async (
@@ -56,40 +57,46 @@ export class ApplicationService {
     if (!isNew) throw new ConflictException('application already exists');
     const CV = data.CV ?? user.CV;
     if (!CV) throw new BadRequestException('cv must upload');
-    try {
-      const apply = await this.applicationRepository.transaction(async (tx) => {
-        const application = await tx.application.create({
-          data: {
-            ...data,
-            CV,
-            user: { connect: { id: user.id } },
-            job: { connect: { id: jobId } },
-          },
-        });
-        await tx.job.update({
-          where: { id: jobId },
-          data: { applicationCount: { increment: 1 } },
-        });
-        return application;
+    const job = await this.jobRepo.findOne(
+      { id: jobId, status: JobStatus.open },
+      {
+        select: {
+          company: { select: { adminId: true } },
+        },
+      },
+    );
+    if (!job) throw new NotFoundException('job not found');
+    const apply = await this.applicationRepository.transaction(async (tx) => {
+      const application = await tx.application.create({
+        data: {
+          ...data,
+          CV,
+          user: { connect: { id: user.id } },
+          job: { connect: { id: jobId } },
+        },
       });
-      const stream = redis.scanStream({
-        match: redisKeys.JobApplication(jobId, '*', '*'),
-        count: 100,
+      await tx.job.update({
+        where: { id: jobId },
+        data: { applicationCount: { increment: 1 } },
       });
-      stream.on('data', (keys) => {
-        if (keys.length > 0) {
-          redis.del(...keys);
-        }
-      });
-      await this.AiJobQueue.analysis(apply.id);
-      await this.dbQueue.changeJobStatus(jobId)
-      return {
-        message: 'application created successfully',
-        data: apply,
-      };
-    } catch (err) {
-      throw new ConflictException(`application not create ,err exist: ${err}`);
-    }
+      return application;
+    });
+    const stream = redis.scanStream({
+      match: redisKeys.JobApplication(jobId, '*', '*'),
+      count: 100,
+    });
+    stream.on('data', (keys) => {
+      if (keys.length > 0) {
+        redis.del(...keys);
+      }
+    });
+    await this.AiJobQueue.analysis(apply.id);
+    await this.dbQueue.changeJobStatus(jobId);
+    await this.SocketGateway.userApplication(job.company.adminId, apply);
+    return {
+      message: 'application created successfully',
+      data: apply,
+    };
   };
   getSpecApply = async (user: IUser, applyId: number) => {
     const application = await this.applicationRepository.findById(applyId, {
@@ -117,17 +124,18 @@ export class ApplicationService {
         },
       },
     });
+    if (!application) throw new NotFoundException('application not found');
     if (user.role == Sys_Role.user) {
-      if (application.user.id !== user.id)
-        throw new NotFoundException('application not found');
-      return {
-        message: 'application details ',
-        data: application,
-      };
+      if (
+        application.user.id !== user.id &&
+        user.companyId !== application.job.companyId
+      )
+        throw new ForbiddenException();
     }
-    if (user.companyId !== application.job.companyId)
-      throw new ForbiddenException();
-    if (application.status == ApplicationStatusEnum.PENDING) {
+    if (
+      application.status == ApplicationStatusEnum.PENDING &&
+      user.role == Sys_Role.company_admin
+    ) {
       await this.applicationRepository.updateById(applyId, {
         status: ApplicationStatusEnum.REVIEWED,
       });
@@ -182,7 +190,10 @@ export class ApplicationService {
     const [applications, total] = await Promise.all([
       this.applicationRepository.findAll({
         where: { jobId: jobId },
-        include: {
+        select: {
+          id: true,
+          phone: true,
+          CV: true,
           user: {
             select: {
               id: true,
@@ -253,17 +264,20 @@ export class ApplicationService {
         status: ApplicationStatusEnum.ACCEPTED,
       },
     );
-    applications.maps(async (app) => {
+    applications.map(async (app) => {
       const { title, content } = notificationHandler(
         NotificationType.JOB_ACCEPTED,
         { jobTitle: app.job.position, companyName: app.job.company.name },
       );
-      const Notifications = await this.NotificationRepo.insert({
+      const notification = await this.NotificationRepo.insert({
         userId: app.userId,
         title: title,
         content: content,
       });
-      //socket
+      await this.SocketGateway.sendNotification({
+        userId: app.userId,
+        notification: notification,
+      });
     });
 
     await this.dbQueue.sendRejectedApplications(setOfApplyIds, jobId);

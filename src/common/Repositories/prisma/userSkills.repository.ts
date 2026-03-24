@@ -11,4 +11,10 @@ export class UserSkillRepository extends BaseRepository<
   constructor(protected readonly prisma: PrismaService) {
     super(prisma, prisma.userSkill);
   }
+  async findOneUSerSkill(filter: object, options?: any) {
+    return this.model.findFirst({
+      where: filter,
+      ...options,
+    });
+  }
 }

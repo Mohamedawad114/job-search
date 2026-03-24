@@ -11,6 +11,7 @@ import {
 import { EmailModule } from 'src/common/Utils/services';
 import { UserDashboard } from './dashboardUser.service';
 import { notificationModel } from 'src/common/DB';
+import { GatewayModule } from '../gateway/gateway.module';
 
 @Module({
   controllers: [DashboardController],
@@ -23,6 +24,6 @@ import { notificationModel } from 'src/common/DB';
     UserDashboard,
     NotificationRepository,
   ],
-  imports: [EmailModule, notificationModel],
+  imports: [EmailModule, notificationModel,GatewayModule],
 })
 export class DashboardModule {}

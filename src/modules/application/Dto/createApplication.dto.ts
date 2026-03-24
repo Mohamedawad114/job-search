@@ -19,7 +19,7 @@ export class createApplication implements Partial<IApplication> {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  @Length(12)
+  @Length(11)
   phone: string;
 
   @ApiProperty()

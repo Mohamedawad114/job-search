@@ -1,34 +1,29 @@
-import { NotificationDocument } from 'src/common/DB';
 import { BaseRepository } from './Base.repository';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import {
+  Conversion,
+  conversionDocument,
+  Message,
+  MessageDocument,
+} from '../../DB/';
 
 @Injectable()
-export class ConversionRepository extends BaseRepository<NotificationDocument> {
+export class ConversionRepository extends BaseRepository<conversionDocument> {
   constructor(
-    @InjectModel(Notification.name)
-    protected notificationModel: Model<NotificationDocument>,
+    @InjectModel(Conversion.name)
+    protected conversionModel: Model<conversionDocument>,
   ) {
-    super(notificationModel);
-  }
-  async updateNotification(
-    notification: NotificationDocument,
-  ): Promise<NotificationDocument> {
-    return await notification.save();
+    super(conversionModel);
   }
 }
 @Injectable()
-export class MessageRepository extends BaseRepository<NotificationDocument> {
+export class MessageRepository extends BaseRepository<MessageDocument> {
   constructor(
-    @InjectModel(Notification.name)
-    protected notificationModel: Model<NotificationDocument>,
+    @InjectModel(Message.name)
+    protected messageModel: Model<MessageDocument>,
   ) {
-    super(notificationModel);
-  }
-  async updateNotification(
-    notification: NotificationDocument,
-  ): Promise<NotificationDocument> {
-    return await notification.save();
+    super(messageModel);
   }
 }

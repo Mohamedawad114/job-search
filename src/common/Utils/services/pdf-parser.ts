@@ -1,28 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { PinoLogger } from 'nestjs-pino';
-const pdf = require('pdf-parse');
-
-export interface ICvExtractor {
-  extractText(url: string): Promise<string>;
-}
+const pdfParse = require('pdf-parse');
 
 @Injectable()
-export class CvExtractorService implements ICvExtractor {
+export class CvExtractorService {
   constructor(private readonly logger: PinoLogger) {}
-
   async extractText(url: string): Promise<string> {
     try {
       const response = await fetch(url);
       if (!response.ok) {
-        throw new Error(`فشل تحميل الملف: ${response.statusText}`);
+        throw new Error(`Failed to fetch PDF: ${response.status}`);
       }
+      const contentType = response.headers.get('content-type');
       const arrayBuffer = await response.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
-      const data = await pdf(buffer);
+      const data = await pdfParse(buffer);
+      if (!data.text.trim()) {
+        throw new Error('Empty PDF text (maybe scanned)');
+      }
       return data.text;
     } catch (error) {
-      this.logger.error('CvExtractorService Error:', error);
-      throw new Error('حدث خطأ أثناء معالجة ملف PDF.');
+      this.logger.error({ err: error }, 'CvExtractorService Error');
+      throw error;
     }
   }
 }

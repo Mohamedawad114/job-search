@@ -1,6 +1,7 @@
+import { Injectable } from '@nestjs/common';
 import { IUser, NotificationRepository } from 'src/common';
 import { redis, redisKeys } from 'src/common/Utils/services';
-
+@Injectable()
 export class NotificationsServices {
   constructor(private readonly notificationRepo: NotificationRepository) {}
 
@@ -32,7 +33,7 @@ export class NotificationsServices {
     return { message: 'no unRead notifications yet' };
   };
   allReadNotifications = async (user: IUser, page: number, limit: number) => {
-    const cached = await redis.get(redisKeys.allJobs(page, limit));
+    const cached = await redis.get(redisKeys.notification(user.id,page, limit));
     if (cached) {
       const notifications = JSON.parse(cached);
       return {

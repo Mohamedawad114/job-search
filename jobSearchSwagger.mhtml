@@ -1,26 +1,26 @@
 From: <Saved by Blink>
 Snapshot-Content-Location: http://localhost:3000/api/docs#/
 Subject: Swagger UI
-Date: Wed, 18 Mar 2026 19:08:34 +0200
+Date: Fri, 20 Mar 2026 23:19:37 +0200
 MIME-Version: 1.0
 Content-Type: multipart/related;
 	type="text/html";
-	boundary="----MultipartBoundary--ToLlFl6Ow9TV0in6XwlbSpDqeMJ8cgkH1QP7tereNF----"
+	boundary="----MultipartBoundary--iVHTgu75Fo9PLl1ykS6TLLntBv0ab8vNykpAMBFt2F----"
 
 
-------MultipartBoundary--ToLlFl6Ow9TV0in6XwlbSpDqeMJ8cgkH1QP7tereNF----
+------MultipartBoundary--iVHTgu75Fo9PLl1ykS6TLLntBv0ab8vNykpAMBFt2F----
 Content-Type: text/html
-Content-ID: <frame-0DF3487E78B1E3D75FC2B9F9E7806702@mhtml.blink>
+Content-ID: <frame-E97574D421394D09E3AC5B0939DE5FFE@mhtml.blink>
 Content-Transfer-Encoding: quoted-printable
 Content-Location: http://localhost:3000/api/docs#/
 
 <!-- HTML for static distribution bundle build --><!DOCTYPE html><html lang=
 =3D"en" class=3D"dark-mode"><head><meta http-equiv=3D"Content-Type" content=
 =3D"text/html; charset=3DUTF-8"><link rel=3D"stylesheet" type=3D"text/css" =
-href=3D"cid:css-a6b30b87-a17e-486b-847a-ade83cac929e@mhtml.blink" /><link r=
-el=3D"stylesheet" type=3D"text/css" href=3D"cid:css-b26b027f-79a9-4675-8e31=
--72ded9af46c8@mhtml.blink" /><link rel=3D"stylesheet" type=3D"text/css" hre=
-f=3D"cid:css-21e4d0c9-cf94-4abf-b370-902bb46895d7@mhtml.blink" />
+href=3D"cid:css-90416ca9-5dcc-4a5d-812a-bdd9eab9aabf@mhtml.blink" /><link r=
+el=3D"stylesheet" type=3D"text/css" href=3D"cid:css-a789b478-463d-4e2c-9a76=
+-20a1f11700f7@mhtml.blink" /><link rel=3D"stylesheet" type=3D"text/css" hre=
+f=3D"cid:css-4c6e6e07-bcb6-42f9-8d55-cb73931fad12@mhtml.blink" />
  =20
   <title>Swagger UI</title>
   <link rel=3D"stylesheet" type=3D"text/css" href=3D"http://localhost:3000/=
@@ -2359,175 +2359,358 @@ bindex=3D"-1"><svg xmlns=3D"http://www.w3.org/2000/svg" viewBox=3D"0 0 20 2=
 e=3D"false"><path d=3D"M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .9=
 69l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.9=
 69.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg></button></d=
-iv></div></span></div> </div></div></span></div></section></div><div class=
-=3D"wrapper"><section class=3D"block col-12 block-desktop col-12-desktop"><=
-section class=3D"models is-open"><h4><button aria-expanded=3D"true" class=
-=3D"models-control"><span>Schemas</span><svg xmlns=3D"http://www.w3.org/200=
-0/svg" viewBox=3D"0 0 20 20" width=3D"20" height=3D"20" aria-hidden=3D"true=
-" focusable=3D"false"><path d=3D"M 17.418 14.908 C 17.69 15.176 18.127 15.1=
-76 18.397 14.908 C 18.667 14.64 18.668 14.207 18.397 13.939 L 10.489 6.109 =
-C 10.219 5.841 9.782 5.841 9.51 6.109 L 1.602 13.939 C 1.332 14.207 1.332 1=
-4.64 1.602 14.908 C 1.873 15.176 2.311 15.176 2.581 14.908 L 10 7.767 L 17.=
-418 14.908 Z"></path></svg></button></h4><div class=3D"no-margin"> <div id=
-=3D"model-signupDto" class=3D"model-container" data-name=3D"signupDto"><spa=
-n class=3D"models-jump-to-path"></span><span class=3D"model-box"><button ar=
-ia-expanded=3D"false" class=3D"model-box-control"><span class=3D"pointer"><=
-span class=3D"model-box"><span class=3D"model model-title">signupDto</span>=
-</span></span><span class=3D"model-toggle collapsed"></span><span> </span><=
-/button></span></div><div id=3D"model-LoginDto" class=3D"model-container" d=
-ata-name=3D"LoginDto"><span class=3D"models-jump-to-path"></span><span clas=
-s=3D"model-box"><button aria-expanded=3D"false" class=3D"model-box-control"=
-><span class=3D"pointer"><span class=3D"model-box"><span class=3D"model mod=
-el-title">LoginDto</span></span></span><span class=3D"model-toggle collapse=
-d"></span><span> </span></button></span></div><div id=3D"model-ConfirmEmail=
-Dto" class=3D"model-container" data-name=3D"ConfirmEmailDto"><span class=3D=
-"models-jump-to-path"></span><span class=3D"model-box"><button aria-expande=
-d=3D"false" class=3D"model-box-control"><span class=3D"pointer"><span class=
-=3D"model-box"><span class=3D"model model-title">ConfirmEmailDto</span></sp=
-an></span><span class=3D"model-toggle collapsed"></span><span> </span></but=
-ton></span></div><div id=3D"model-UpdateProfileDto" class=3D"model-containe=
-r" data-name=3D"UpdateProfileDto"><span class=3D"models-jump-to-path"></spa=
-n><span class=3D"model-box"><button aria-expanded=3D"false" class=3D"model-=
-box-control"><span class=3D"pointer"><span class=3D"model-box"><span class=
-=3D"model model-title">UpdateProfileDto</span></span></span><span class=3D"=
-model-toggle collapsed"></span><span> </span></button></span></div><div id=
-=3D"model-AddEducationDto" class=3D"model-container" data-name=3D"AddEducat=
-ionDto"><span class=3D"models-jump-to-path"></span><span class=3D"model-box=
-"><button aria-expanded=3D"false" class=3D"model-box-control"><span class=
-=3D"pointer"><span class=3D"model-box"><span class=3D"model model-title">Ad=
-dEducationDto</span></span></span><span class=3D"model-toggle collapsed"></=
-span><span> </span></button></span></div><div id=3D"model-updateEducationDt=
-o" class=3D"model-container" data-name=3D"updateEducationDto"><span class=
-=3D"models-jump-to-path"></span><span class=3D"model-box"><button aria-expa=
-nded=3D"false" class=3D"model-box-control"><span class=3D"pointer"><span cl=
-ass=3D"model-box"><span class=3D"model model-title">updateEducationDto</spa=
-n></span></span><span class=3D"model-toggle collapsed"></span><span> </span=
-></button></span></div><div id=3D"model-AddExperienceDto" class=3D"model-co=
-ntainer" data-name=3D"AddExperienceDto"><span class=3D"models-jump-to-path"=
-></span><span class=3D"model-box"><button aria-expanded=3D"false" class=3D"=
-model-box-control"><span class=3D"pointer"><span class=3D"model-box"><span =
-class=3D"model model-title">AddExperienceDto</span></span></span><span clas=
-s=3D"model-toggle collapsed"></span><span> </span></button></span></div><di=
-v id=3D"model-UpdateExperienceDto" class=3D"model-container" data-name=3D"U=
-pdateExperienceDto"><span class=3D"models-jump-to-path"></span><span class=
-=3D"model-box"><button aria-expanded=3D"false" class=3D"model-box-control">=
-<span class=3D"pointer"><span class=3D"model-box"><span class=3D"model mode=
-l-title">UpdateExperienceDto</span></span></span><span class=3D"model-toggl=
-e collapsed"></span><span> </span></button></span></div><div id=3D"model-Ad=
-dUserSkill" class=3D"model-container" data-name=3D"AddUserSkill"><span clas=
-s=3D"models-jump-to-path"></span><span class=3D"model-box"><button aria-exp=
-anded=3D"false" class=3D"model-box-control"><span class=3D"pointer"><span c=
-lass=3D"model-box"><span class=3D"model model-title">AddUserSkill</span></s=
-pan></span><span class=3D"model-toggle collapsed"></span><span> </span></bu=
-tton></span></div><div id=3D"model-UpdateUserSkill" class=3D"model-containe=
-r" data-name=3D"UpdateUserSkill"><span class=3D"models-jump-to-path"></span=
-><span class=3D"model-box"><button aria-expanded=3D"false" class=3D"model-b=
-ox-control"><span class=3D"pointer"><span class=3D"model-box"><span class=
-=3D"model model-title">UpdateUserSkill</span></span></span><span class=3D"m=
-odel-toggle collapsed"></span><span> </span></button></span></div><div id=
-=3D"model-updatePasswordDto" class=3D"model-container" data-name=3D"updateP=
-asswordDto"><span class=3D"models-jump-to-path"></span><span class=3D"model=
+iv></div></span></div> </div></div></span><span><div class=3D"opblock-tag-s=
+ection is-open"><h3 class=3D"opblock-tag no-desc" id=3D"operations-tag-Conv=
+ersations" data-tag=3D"Conversations" data-is-open=3D"true"><a class=3D"nos=
+tyle" href=3D"http://localhost:3000/api/docs#/Conversations"><span>Conversa=
+tions</span></a><small></small><button aria-expanded=3D"true" class=3D"expa=
+nd-operation" title=3D"Collapse operation"><svg xmlns=3D"http://www.w3.org/=
+2000/svg" viewBox=3D"0 0 20 20" class=3D"arrow" width=3D"20" height=3D"20" =
+aria-hidden=3D"true" focusable=3D"false"><path d=3D"M 17.418 14.908 C 17.69=
+ 15.176 18.127 15.176 18.397 14.908 C 18.667 14.64 18.668 14.207 18.397 13.=
+939 L 10.489 6.109 C 10.219 5.841 9.782 5.841 9.51 6.109 L 1.602 13.939 C 1=
+.332 14.207 1.332 14.64 1.602 14.908 C 1.873 15.176 2.311 15.176 2.581 14.9=
+08 L 10 7.767 L 17.418 14.908 Z"></path></svg></button></h3><div class=3D"n=
+o-margin"> <div class=3D"operation-tag-content"><span><div class=3D"opblock=
+ opblock-post" id=3D"operations-Conversations-ConversationController_create=
+Group"><div class=3D"opblock-summary opblock-summary-post"><button aria-exp=
+anded=3D"false" class=3D"opblock-summary-control"><span class=3D"opblock-su=
+mmary-method">POST</span><div class=3D"opblock-summary-path-description-wra=
+pper"><span class=3D"opblock-summary-path" data-path=3D"/conversations/grou=
+p"><a class=3D"nostyle" href=3D"http://localhost:3000/api/docs#/Conversatio=
+ns/ConversationController_createGroup"><span>/conversations<wbr>/group</spa=
+n></a></span><div class=3D"opblock-summary-description">Create a new group =
+conversation</div></div></button><div class=3D"view-line-link copy-to-clipb=
+oard" title=3D"Copy to clipboard"><svg xmlns=3D"http://www.w3.org/2000/svg"=
+ viewBox=3D"0 0 15 16" width=3D"15" height=3D"16" aria-hidden=3D"true" focu=
+sable=3D"false"><g transform=3D"translate(2, -1)"><path fill=3D"#ffffff" fi=
+ll-rule=3D"evenodd" d=3D"M2 13h4v1H2v-1zm5-6H2v1h5V7zm2 3V8l-3 3 3 3v-2h5v-=
+2H9zM4.5 9H2v1h2.5V9zM2 12h2.5v-1H2v1zm9 1h1v2c-.02.28-.11.52-.3.7-.19.18-.=
+42.28-.7.3H1c-.55 0-1-.45-1-1V4c0-.55.45-1 1-1h3c0-1.11.89-2 2-2 1.11 0 2 .=
+89 2 2h3c.55 0 1 .45 1 1v5h-1V6H1v9h10v-2zM2 5h8c0-.55-.45-1-1-1H8c-.55 0-1=
+-.45-1-1s-.45-1-1-1-1 .45-1 1-.45 1-1 1H3c-.55 0-1 .45-1 1z"></path></g></s=
+vg></div><button class=3D"authorization__btn" aria-label=3D"authorization b=
+utton unlocked"><svg xmlns=3D"http://www.w3.org/2000/svg" viewBox=3D"0 0 20=
+ 20" class=3D"unlocked" width=3D"20" height=3D"20" aria-hidden=3D"true" foc=
+usable=3D"false"><path d=3D"M15.8 8H14V5.6C14 2.703 12.665 1 10 1 7.334 1 6=
+ 2.703 6 5.6V6h2v-.801C8 3.754 8.797 3 10 3c1.203 0 2 .754 2 2.199V8H4c-.55=
+3 0-1 .646-1 1.199V17c0 .549.428 1.139.951 1.307l1.197.387C5.672 18.861 6.5=
+5 19 7.1 19h5.8c.549 0 1.428-.139 1.951-.307l1.196-.387c.524-.167.953-.757.=
+953-1.306V9.199C17 8.646 16.352 8 15.8 8z"></path></svg></button><button ar=
+ia-label=3D"post =E2=80=8B/conversations=E2=80=8B/group" class=3D"opblock-c=
+ontrol-arrow" aria-expanded=3D"false" tabindex=3D"-1"><svg xmlns=3D"http://=
+www.w3.org/2000/svg" viewBox=3D"0 0 20 20" class=3D"arrow" width=3D"20" hei=
+ght=3D"20" aria-hidden=3D"true" focusable=3D"false"><path d=3D"M17.418 6.10=
+9c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.9=
+79 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25=
+l7.418-7.141z"></path></svg></button></div></div></span><span><div class=3D=
+"opblock opblock-patch" id=3D"operations-Conversations-ConversationControll=
+er_addMember"><div class=3D"opblock-summary opblock-summary-patch"><button =
+aria-expanded=3D"false" class=3D"opblock-summary-control"><span class=3D"op=
+block-summary-method">PATCH</span><div class=3D"opblock-summary-path-descri=
+ption-wrapper"><span class=3D"opblock-summary-path" data-path=3D"/conversat=
+ions/group/{groupId}/add-member/{userId}"><a class=3D"nostyle" href=3D"http=
+://localhost:3000/api/docs#/Conversations/ConversationController_addMember"=
+><span>/conversations<wbr>/group<wbr>/{groupId}<wbr>/add-member<wbr>/{userI=
+d}</span></a></span><div class=3D"opblock-summary-description">Add a member=
+ to a group (Admin only)</div></div></button><div class=3D"view-line-link c=
+opy-to-clipboard" title=3D"Copy to clipboard"><svg xmlns=3D"http://www.w3.o=
+rg/2000/svg" viewBox=3D"0 0 15 16" width=3D"15" height=3D"16" aria-hidden=
+=3D"true" focusable=3D"false"><g transform=3D"translate(2, -1)"><path fill=
+=3D"#ffffff" fill-rule=3D"evenodd" d=3D"M2 13h4v1H2v-1zm5-6H2v1h5V7zm2 3V8l=
+-3 3 3 3v-2h5v-2H9zM4.5 9H2v1h2.5V9zM2 12h2.5v-1H2v1zm9 1h1v2c-.02.28-.11.5=
+2-.3.7-.19.18-.42.28-.7.3H1c-.55 0-1-.45-1-1V4c0-.55.45-1 1-1h3c0-1.11.89-2=
+ 2-2 1.11 0 2 .89 2 2h3c.55 0 1 .45 1 1v5h-1V6H1v9h10v-2zM2 5h8c0-.55-.45-1=
+-1-1H8c-.55 0-1-.45-1-1s-.45-1-1-1-1 .45-1 1-.45 1-1 1H3c-.55 0-1 .45-1 1z"=
+></path></g></svg></div><button class=3D"authorization__btn" aria-label=3D"=
+authorization button unlocked"><svg xmlns=3D"http://www.w3.org/2000/svg" vi=
+ewBox=3D"0 0 20 20" class=3D"unlocked" width=3D"20" height=3D"20" aria-hidd=
+en=3D"true" focusable=3D"false"><path d=3D"M15.8 8H14V5.6C14 2.703 12.665 1=
+ 10 1 7.334 1 6 2.703 6 5.6V6h2v-.801C8 3.754 8.797 3 10 3c1.203 0 2 .754 2=
+ 2.199V8H4c-.553 0-1 .646-1 1.199V17c0 .549.428 1.139.951 1.307l1.197.387C5=
+.672 18.861 6.55 19 7.1 19h5.8c.549 0 1.428-.139 1.951-.307l1.196-.387c.524=
+-.167.953-.757.953-1.306V9.199C17 8.646 16.352 8 15.8 8z"></path></svg></bu=
+tton><button aria-label=3D"patch =E2=80=8B/conversations=E2=80=8B/group=E2=
+=80=8B/{groupId}=E2=80=8B/add-member=E2=80=8B/{userId}" class=3D"opblock-co=
+ntrol-arrow" aria-expanded=3D"false" tabindex=3D"-1"><svg xmlns=3D"http://w=
+ww.w3.org/2000/svg" viewBox=3D"0 0 20 20" class=3D"arrow" width=3D"20" heig=
+ht=3D"20" aria-hidden=3D"true" focusable=3D"false"><path d=3D"M17.418 6.109=
+c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.97=
+9 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l=
+7.418-7.141z"></path></svg></button></div></div></span><span><div class=3D"=
+opblock opblock-delete" id=3D"operations-Conversations-ConversationControll=
+er_removeMember"><div class=3D"opblock-summary opblock-summary-delete"><but=
+ton aria-expanded=3D"false" class=3D"opblock-summary-control"><span class=
+=3D"opblock-summary-method">DELETE</span><div class=3D"opblock-summary-path=
+-description-wrapper"><span class=3D"opblock-summary-path" data-path=3D"/co=
+nversations/group/{groupId}/remove-member/{userId}"><a class=3D"nostyle" hr=
+ef=3D"http://localhost:3000/api/docs#/Conversations/ConversationController_=
+removeMember"><span>/conversations<wbr>/group<wbr>/{groupId}<wbr>/remove-me=
+mber<wbr>/{userId}</span></a></span><div class=3D"opblock-summary-descripti=
+on">Remove a member from a group (Admin only)</div></div></button><div clas=
+s=3D"view-line-link copy-to-clipboard" title=3D"Copy to clipboard"><svg xml=
+ns=3D"http://www.w3.org/2000/svg" viewBox=3D"0 0 15 16" width=3D"15" height=
+=3D"16" aria-hidden=3D"true" focusable=3D"false"><g transform=3D"translate(=
+2, -1)"><path fill=3D"#ffffff" fill-rule=3D"evenodd" d=3D"M2 13h4v1H2v-1zm5=
+-6H2v1h5V7zm2 3V8l-3 3 3 3v-2h5v-2H9zM4.5 9H2v1h2.5V9zM2 12h2.5v-1H2v1zm9 1=
+h1v2c-.02.28-.11.52-.3.7-.19.18-.42.28-.7.3H1c-.55 0-1-.45-1-1V4c0-.55.45-1=
+ 1-1h3c0-1.11.89-2 2-2 1.11 0 2 .89 2 2h3c.55 0 1 .45 1 1v5h-1V6H1v9h10v-2z=
+M2 5h8c0-.55-.45-1-1-1H8c-.55 0-1-.45-1-1s-.45-1-1-1-1 .45-1 1-.45 1-1 1H3c=
+-.55 0-1 .45-1 1z"></path></g></svg></div><button class=3D"authorization__b=
+tn" aria-label=3D"authorization button unlocked"><svg xmlns=3D"http://www.w=
+3.org/2000/svg" viewBox=3D"0 0 20 20" class=3D"unlocked" width=3D"20" heigh=
+t=3D"20" aria-hidden=3D"true" focusable=3D"false"><path d=3D"M15.8 8H14V5.6=
+C14 2.703 12.665 1 10 1 7.334 1 6 2.703 6 5.6V6h2v-.801C8 3.754 8.797 3 10 =
+3c1.203 0 2 .754 2 2.199V8H4c-.553 0-1 .646-1 1.199V17c0 .549.428 1.139.951=
+ 1.307l1.197.387C5.672 18.861 6.55 19 7.1 19h5.8c.549 0 1.428-.139 1.951-.3=
+07l1.196-.387c.524-.167.953-.757.953-1.306V9.199C17 8.646 16.352 8 15.8 8z"=
+></path></svg></button><button aria-label=3D"delete =E2=80=8B/conversations=
+=E2=80=8B/group=E2=80=8B/{groupId}=E2=80=8B/remove-member=E2=80=8B/{userId}=
+" class=3D"opblock-control-arrow" aria-expanded=3D"false" tabindex=3D"-1"><=
+svg xmlns=3D"http://www.w3.org/2000/svg" viewBox=3D"0 0 20 20" class=3D"arr=
+ow" width=3D"20" height=3D"20" aria-hidden=3D"true" focusable=3D"false"><pa=
+th d=3D"M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c=
+-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709=
+-.268.979 0L10 13.25l7.418-7.141z"></path></svg></button></div></div></span=
+><span><div class=3D"opblock opblock-get" id=3D"operations-Conversations-Co=
+nversationController_getGroupInfo"><div class=3D"opblock-summary opblock-su=
+mmary-get"><button aria-expanded=3D"false" class=3D"opblock-summary-control=
+"><span class=3D"opblock-summary-method">GET</span><div class=3D"opblock-su=
+mmary-path-description-wrapper"><span class=3D"opblock-summary-path" data-p=
+ath=3D"/conversations/group/{groupId}/info"><a class=3D"nostyle" href=3D"ht=
+tp://localhost:3000/api/docs#/Conversations/ConversationController_getGroup=
+Info"><span>/conversations<wbr>/group<wbr>/{groupId}<wbr>/info</span></a></=
+span><div class=3D"opblock-summary-description">Get specific group details<=
+/div></div></button><div class=3D"view-line-link copy-to-clipboard" title=
+=3D"Copy to clipboard"><svg xmlns=3D"http://www.w3.org/2000/svg" viewBox=3D=
+"0 0 15 16" width=3D"15" height=3D"16" aria-hidden=3D"true" focusable=3D"fa=
+lse"><g transform=3D"translate(2, -1)"><path fill=3D"#ffffff" fill-rule=3D"=
+evenodd" d=3D"M2 13h4v1H2v-1zm5-6H2v1h5V7zm2 3V8l-3 3 3 3v-2h5v-2H9zM4.5 9H=
+2v1h2.5V9zM2 12h2.5v-1H2v1zm9 1h1v2c-.02.28-.11.52-.3.7-.19.18-.42.28-.7.3H=
+1c-.55 0-1-.45-1-1V4c0-.55.45-1 1-1h3c0-1.11.89-2 2-2 1.11 0 2 .89 2 2h3c.5=
+5 0 1 .45 1 1v5h-1V6H1v9h10v-2zM2 5h8c0-.55-.45-1-1-1H8c-.55 0-1-.45-1-1s-.=
+45-1-1-1-1 .45-1 1-.45 1-1 1H3c-.55 0-1 .45-1 1z"></path></g></svg></div><b=
+utton class=3D"authorization__btn" aria-label=3D"authorization button unloc=
+ked"><svg xmlns=3D"http://www.w3.org/2000/svg" viewBox=3D"0 0 20 20" class=
+=3D"unlocked" width=3D"20" height=3D"20" aria-hidden=3D"true" focusable=3D"=
+false"><path d=3D"M15.8 8H14V5.6C14 2.703 12.665 1 10 1 7.334 1 6 2.703 6 5=
+.6V6h2v-.801C8 3.754 8.797 3 10 3c1.203 0 2 .754 2 2.199V8H4c-.553 0-1 .646=
+-1 1.199V17c0 .549.428 1.139.951 1.307l1.197.387C5.672 18.861 6.55 19 7.1 1=
+9h5.8c.549 0 1.428-.139 1.951-.307l1.196-.387c.524-.167.953-.757.953-1.306V=
+9.199C17 8.646 16.352 8 15.8 8z"></path></svg></button><button aria-label=
+=3D"get =E2=80=8B/conversations=E2=80=8B/group=E2=80=8B/{groupId}=E2=80=8B/=
+info" class=3D"opblock-control-arrow" aria-expanded=3D"false" tabindex=3D"-=
+1"><svg xmlns=3D"http://www.w3.org/2000/svg" viewBox=3D"0 0 20 20" class=3D=
+"arrow" width=3D"20" height=3D"20" aria-hidden=3D"true" focusable=3D"false"=
+><path d=3D"M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7=
+.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268=
+.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg></button></div></div></=
+span><span><div class=3D"opblock opblock-get" id=3D"operations-Conversation=
+s-ConversationController_listUserChats"><div class=3D"opblock-summary opblo=
+ck-summary-get"><button aria-expanded=3D"false" class=3D"opblock-summary-co=
+ntrol"><span class=3D"opblock-summary-method">GET</span><div class=3D"opblo=
+ck-summary-path-description-wrapper"><span class=3D"opblock-summary-path" d=
+ata-path=3D"/conversations/my-chats"><a class=3D"nostyle" href=3D"http://lo=
+calhost:3000/api/docs#/Conversations/ConversationController_listUserChats">=
+<span>/conversations<wbr>/my-chats</span></a></span><div class=3D"opblock-s=
+ummary-description">List all chats for the authenticated user</div></div></=
+button><div class=3D"view-line-link copy-to-clipboard" title=3D"Copy to cli=
+pboard"><svg xmlns=3D"http://www.w3.org/2000/svg" viewBox=3D"0 0 15 16" wid=
+th=3D"15" height=3D"16" aria-hidden=3D"true" focusable=3D"false"><g transfo=
+rm=3D"translate(2, -1)"><path fill=3D"#ffffff" fill-rule=3D"evenodd" d=3D"M=
+2 13h4v1H2v-1zm5-6H2v1h5V7zm2 3V8l-3 3 3 3v-2h5v-2H9zM4.5 9H2v1h2.5V9zM2 12=
+h2.5v-1H2v1zm9 1h1v2c-.02.28-.11.52-.3.7-.19.18-.42.28-.7.3H1c-.55 0-1-.45-=
+1-1V4c0-.55.45-1 1-1h3c0-1.11.89-2 2-2 1.11 0 2 .89 2 2h3c.55 0 1 .45 1 1v5=
+h-1V6H1v9h10v-2zM2 5h8c0-.55-.45-1-1-1H8c-.55 0-1-.45-1-1s-.45-1-1-1-1 .45-=
+1 1-.45 1-1 1H3c-.55 0-1 .45-1 1z"></path></g></svg></div><button class=3D"=
+authorization__btn" aria-label=3D"authorization button unlocked"><svg xmlns=
+=3D"http://www.w3.org/2000/svg" viewBox=3D"0 0 20 20" class=3D"unlocked" wi=
+dth=3D"20" height=3D"20" aria-hidden=3D"true" focusable=3D"false"><path d=
+=3D"M15.8 8H14V5.6C14 2.703 12.665 1 10 1 7.334 1 6 2.703 6 5.6V6h2v-.801C8=
+ 3.754 8.797 3 10 3c1.203 0 2 .754 2 2.199V8H4c-.553 0-1 .646-1 1.199V17c0 =
+.549.428 1.139.951 1.307l1.197.387C5.672 18.861 6.55 19 7.1 19h5.8c.549 0 1=
+.428-.139 1.951-.307l1.196-.387c.524-.167.953-.757.953-1.306V9.199C17 8.646=
+ 16.352 8 15.8 8z"></path></svg></button><button aria-label=3D"get =E2=80=
+=8B/conversations=E2=80=8B/my-chats" class=3D"opblock-control-arrow" aria-e=
+xpanded=3D"false" tabindex=3D"-1"><svg xmlns=3D"http://www.w3.org/2000/svg"=
+ viewBox=3D"0 0 20 20" class=3D"arrow" width=3D"20" height=3D"20" aria-hidd=
+en=3D"true" focusable=3D"false"><path d=3D"M17.418 6.109c.272-.268.709-.268=
+.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.2=
+7-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></pat=
+h></svg></button></div></div></span></div> </div></div></span></div></secti=
+on></div><div class=3D"wrapper"><section class=3D"block col-12 block-deskto=
+p col-12-desktop"><section class=3D"models is-open"><h4><button aria-expand=
+ed=3D"true" class=3D"models-control"><span>Schemas</span><svg xmlns=3D"http=
+://www.w3.org/2000/svg" viewBox=3D"0 0 20 20" width=3D"20" height=3D"20" ar=
+ia-hidden=3D"true" focusable=3D"false"><path d=3D"M 17.418 14.908 C 17.69 1=
+5.176 18.127 15.176 18.397 14.908 C 18.667 14.64 18.668 14.207 18.397 13.93=
+9 L 10.489 6.109 C 10.219 5.841 9.782 5.841 9.51 6.109 L 1.602 13.939 C 1.3=
+32 14.207 1.332 14.64 1.602 14.908 C 1.873 15.176 2.311 15.176 2.581 14.908=
+ L 10 7.767 L 17.418 14.908 Z"></path></svg></button></h4><div class=3D"no-=
+margin"> <div id=3D"model-signupDto" class=3D"model-container" data-name=3D=
+"signupDto"><span class=3D"models-jump-to-path"></span><span class=3D"model=
 -box"><button aria-expanded=3D"false" class=3D"model-box-control"><span cla=
 ss=3D"pointer"><span class=3D"model-box"><span class=3D"model model-title">=
-updatePasswordDto</span></span></span><span class=3D"model-toggle collapsed=
-"></span><span> </span></button></span></div><div id=3D"model-ResetPassword=
-Dto" class=3D"model-container" data-name=3D"ResetPasswordDto"><span class=
-=3D"models-jump-to-path"></span><span class=3D"model-box"><button aria-expa=
-nded=3D"false" class=3D"model-box-control"><span class=3D"pointer"><span cl=
-ass=3D"model-box"><span class=3D"model model-title">ResetPasswordDto</span>=
-</span></span><span class=3D"model-toggle collapsed"></span><span> </span><=
-/button></span></div><div id=3D"model-UpdateUploadDto" class=3D"model-conta=
-iner" data-name=3D"UpdateUploadDto"><span class=3D"models-jump-to-path"></s=
-pan><span class=3D"model-box"><button aria-expanded=3D"false" class=3D"mode=
-l-box-control"><span class=3D"pointer"><span class=3D"model-box"><span clas=
-s=3D"model model-title">UpdateUploadDto</span></span></span><span class=3D"=
+signupDto</span></span></span><span class=3D"model-toggle collapsed"></span=
+><span> </span></button></span></div><div id=3D"model-LoginDto" class=3D"mo=
+del-container" data-name=3D"LoginDto"><span class=3D"models-jump-to-path"><=
+/span><span class=3D"model-box"><button aria-expanded=3D"false" class=3D"mo=
+del-box-control"><span class=3D"pointer"><span class=3D"model-box"><span cl=
+ass=3D"model model-title">LoginDto</span></span></span><span class=3D"model=
+-toggle collapsed"></span><span> </span></button></span></div><div id=3D"mo=
+del-ConfirmEmailDto" class=3D"model-container" data-name=3D"ConfirmEmailDto=
+"><span class=3D"models-jump-to-path"></span><span class=3D"model-box"><but=
+ton aria-expanded=3D"false" class=3D"model-box-control"><span class=3D"poin=
+ter"><span class=3D"model-box"><span class=3D"model model-title">ConfirmEma=
+ilDto</span></span></span><span class=3D"model-toggle collapsed"></span><sp=
+an> </span></button></span></div><div id=3D"model-UpdateProfileDto" class=
+=3D"model-container" data-name=3D"UpdateProfileDto"><span class=3D"models-j=
+ump-to-path"></span><span class=3D"model-box"><button aria-expanded=3D"fals=
+e" class=3D"model-box-control"><span class=3D"pointer"><span class=3D"model=
+-box"><span class=3D"model model-title">UpdateProfileDto</span></span></spa=
+n><span class=3D"model-toggle collapsed"></span><span> </span></button></sp=
+an></div><div id=3D"model-AddEducationDto" class=3D"model-container" data-n=
+ame=3D"AddEducationDto"><span class=3D"models-jump-to-path"></span><span cl=
+ass=3D"model-box"><button aria-expanded=3D"false" class=3D"model-box-contro=
+l"><span class=3D"pointer"><span class=3D"model-box"><span class=3D"model m=
+odel-title">AddEducationDto</span></span></span><span class=3D"model-toggle=
+ collapsed"></span><span> </span></button></span></div><div id=3D"model-upd=
+ateEducationDto" class=3D"model-container" data-name=3D"updateEducationDto"=
+><span class=3D"models-jump-to-path"></span><span class=3D"model-box"><butt=
+on aria-expanded=3D"false" class=3D"model-box-control"><span class=3D"point=
+er"><span class=3D"model-box"><span class=3D"model model-title">updateEduca=
+tionDto</span></span></span><span class=3D"model-toggle collapsed"></span><=
+span> </span></button></span></div><div id=3D"model-AddExperienceDto" class=
+=3D"model-container" data-name=3D"AddExperienceDto"><span class=3D"models-j=
+ump-to-path"></span><span class=3D"model-box"><button aria-expanded=3D"fals=
+e" class=3D"model-box-control"><span class=3D"pointer"><span class=3D"model=
+-box"><span class=3D"model model-title">AddExperienceDto</span></span></spa=
+n><span class=3D"model-toggle collapsed"></span><span> </span></button></sp=
+an></div><div id=3D"model-UpdateExperienceDto" class=3D"model-container" da=
+ta-name=3D"UpdateExperienceDto"><span class=3D"models-jump-to-path"></span>=
+<span class=3D"model-box"><button aria-expanded=3D"false" class=3D"model-bo=
+x-control"><span class=3D"pointer"><span class=3D"model-box"><span class=3D=
+"model model-title">UpdateExperienceDto</span></span></span><span class=3D"=
 model-toggle collapsed"></span><span> </span></button></span></div><div id=
-=3D"model-CreateCompanyDto" class=3D"model-container" data-name=3D"CreateCo=
-mpanyDto"><span class=3D"models-jump-to-path"></span><span class=3D"model-b=
-ox"><button aria-expanded=3D"false" class=3D"model-box-control"><span class=
-=3D"pointer"><span class=3D"model-box"><span class=3D"model model-title">Cr=
-eateCompanyDto</span></span></span><span class=3D"model-toggle collapsed"><=
-/span><span> </span></button></span></div><div id=3D"model-UpdateCompanyDto=
-" class=3D"model-container" data-name=3D"UpdateCompanyDto"><span class=3D"m=
-odels-jump-to-path"></span><span class=3D"model-box"><button aria-expanded=
-=3D"false" class=3D"model-box-control"><span class=3D"pointer"><span class=
-=3D"model-box"><span class=3D"model model-title">UpdateCompanyDto</span></s=
-pan></span><span class=3D"model-toggle collapsed"></span><span> </span></bu=
-tton></span></div><div id=3D"model-UploadDto" class=3D"model-container" dat=
-a-name=3D"UploadDto"><span class=3D"models-jump-to-path"></span><span class=
+=3D"model-AddUserSkill" class=3D"model-container" data-name=3D"AddUserSkill=
+"><span class=3D"models-jump-to-path"></span><span class=3D"model-box"><but=
+ton aria-expanded=3D"false" class=3D"model-box-control"><span class=3D"poin=
+ter"><span class=3D"model-box"><span class=3D"model model-title">AddUserSki=
+ll</span></span></span><span class=3D"model-toggle collapsed"></span><span>=
+ </span></button></span></div><div id=3D"model-UpdateUserSkill" class=3D"mo=
+del-container" data-name=3D"UpdateUserSkill"><span class=3D"models-jump-to-=
+path"></span><span class=3D"model-box"><button aria-expanded=3D"false" clas=
+s=3D"model-box-control"><span class=3D"pointer"><span class=3D"model-box"><=
+span class=3D"model model-title">UpdateUserSkill</span></span></span><span =
+class=3D"model-toggle collapsed"></span><span> </span></button></span></div=
+><div id=3D"model-updatePasswordDto" class=3D"model-container" data-name=3D=
+"updatePasswordDto"><span class=3D"models-jump-to-path"></span><span class=
 =3D"model-box"><button aria-expanded=3D"false" class=3D"model-box-control">=
 <span class=3D"pointer"><span class=3D"model-box"><span class=3D"model mode=
-l-title">UploadDto</span></span></span><span class=3D"model-toggle collapse=
-d"></span><span> </span></button></span></div><div id=3D"model-ChangeAdminC=
-ompany" class=3D"model-container" data-name=3D"ChangeAdminCompany"><span cl=
-ass=3D"models-jump-to-path"></span><span class=3D"model-box"><button aria-e=
-xpanded=3D"false" class=3D"model-box-control"><span class=3D"pointer"><span=
- class=3D"model-box"><span class=3D"model model-title">ChangeAdminCompany</=
-span></span></span><span class=3D"model-toggle collapsed"></span><span> </s=
-pan></button></span></div><div id=3D"model-CreateSkillDto" class=3D"model-c=
-ontainer" data-name=3D"CreateSkillDto"><span class=3D"models-jump-to-path">=
-</span><span class=3D"model-box"><button aria-expanded=3D"false" class=3D"m=
-odel-box-control"><span class=3D"pointer"><span class=3D"model-box"><span c=
-lass=3D"model model-title">CreateSkillDto</span></span></span><span class=
-=3D"model-toggle collapsed"></span><span> </span></button></span></div><div=
- id=3D"model-CreateJobCatDto" class=3D"model-container" data-name=3D"Create=
-JobCatDto"><span class=3D"models-jump-to-path"></span><span class=3D"model-=
-box"><button aria-expanded=3D"false" class=3D"model-box-control"><span clas=
-s=3D"pointer"><span class=3D"model-box"><span class=3D"model model-title">C=
-reateJobCatDto</span></span></span><span class=3D"model-toggle collapsed"><=
-/span><span> </span></button></span></div><div id=3D"model-CreateWorkTypeDt=
-o" class=3D"model-container" data-name=3D"CreateWorkTypeDto"><span class=3D=
-"models-jump-to-path"></span><span class=3D"model-box"><button aria-expande=
-d=3D"false" class=3D"model-box-control"><span class=3D"pointer"><span class=
-=3D"model-box"><span class=3D"model model-title">CreateWorkTypeDto</span></=
-span></span><span class=3D"model-toggle collapsed"></span><span> </span></b=
-utton></span></div><div id=3D"model-UpdateJobCat" class=3D"model-container"=
- data-name=3D"UpdateJobCat"><span class=3D"models-jump-to-path"></span><spa=
-n class=3D"model-box"><button aria-expanded=3D"false" class=3D"model-box-co=
-ntrol"><span class=3D"pointer"><span class=3D"model-box"><span class=3D"mod=
-el model-title">UpdateJobCat</span></span></span><span class=3D"model-toggl=
-e collapsed"></span><span> </span></button></span></div><div id=3D"model-ch=
-angeRoleDto" class=3D"model-container" data-name=3D"changeRoleDto"><span cl=
-ass=3D"models-jump-to-path"></span><span class=3D"model-box"><button aria-e=
-xpanded=3D"false" class=3D"model-box-control"><span class=3D"pointer"><span=
- class=3D"model-box"><span class=3D"model model-title">changeRoleDto</span>=
-</span></span><span class=3D"model-toggle collapsed"></span><span> </span><=
-/button></span></div><div id=3D"model-AddSkillDto" class=3D"model-container=
-" data-name=3D"AddSkillDto"><span class=3D"models-jump-to-path"></span><spa=
-n class=3D"model-box"><button aria-expanded=3D"false" class=3D"model-box-co=
-ntrol"><span class=3D"pointer"><span class=3D"model-box"><span class=3D"mod=
-el model-title">AddSkillDto</span></span></span><span class=3D"model-toggle=
- collapsed"></span><span> </span></button></span></div><div id=3D"model-Cre=
-ateJobDto" class=3D"model-container" data-name=3D"CreateJobDto"><span class=
-=3D"models-jump-to-path"></span><span class=3D"model-box"><button aria-expa=
-nded=3D"false" class=3D"model-box-control"><span class=3D"pointer"><span cl=
-ass=3D"model-box"><span class=3D"model model-title">CreateJobDto</span></sp=
-an></span><span class=3D"model-toggle collapsed"></span><span> </span></but=
-ton></span></div><div id=3D"model-UpdateJobDto" class=3D"model-container" d=
-ata-name=3D"UpdateJobDto"><span class=3D"models-jump-to-path"></span><span =
+l-title">updatePasswordDto</span></span></span><span class=3D"model-toggle =
+collapsed"></span><span> </span></button></span></div><div id=3D"model-Rese=
+tPasswordDto" class=3D"model-container" data-name=3D"ResetPasswordDto"><spa=
+n class=3D"models-jump-to-path"></span><span class=3D"model-box"><button ar=
+ia-expanded=3D"false" class=3D"model-box-control"><span class=3D"pointer"><=
+span class=3D"model-box"><span class=3D"model model-title">ResetPasswordDto=
+</span></span></span><span class=3D"model-toggle collapsed"></span><span> <=
+/span></button></span></div><div id=3D"model-UpdateUploadDto" class=3D"mode=
+l-container" data-name=3D"UpdateUploadDto"><span class=3D"models-jump-to-pa=
+th"></span><span class=3D"model-box"><button aria-expanded=3D"false" class=
+=3D"model-box-control"><span class=3D"pointer"><span class=3D"model-box"><s=
+pan class=3D"model model-title">UpdateUploadDto</span></span></span><span c=
+lass=3D"model-toggle collapsed"></span><span> </span></button></span></div>=
+<div id=3D"model-CreateCompanyDto" class=3D"model-container" data-name=3D"C=
+reateCompanyDto"><span class=3D"models-jump-to-path"></span><span class=3D"=
+model-box"><button aria-expanded=3D"false" class=3D"model-box-control"><spa=
+n class=3D"pointer"><span class=3D"model-box"><span class=3D"model model-ti=
+tle">CreateCompanyDto</span></span></span><span class=3D"model-toggle colla=
+psed"></span><span> </span></button></span></div><div id=3D"model-UpdateCom=
+panyDto" class=3D"model-container" data-name=3D"UpdateCompanyDto"><span cla=
+ss=3D"models-jump-to-path"></span><span class=3D"model-box"><button aria-ex=
+panded=3D"false" class=3D"model-box-control"><span class=3D"pointer"><span =
+class=3D"model-box"><span class=3D"model model-title">UpdateCompanyDto</spa=
+n></span></span><span class=3D"model-toggle collapsed"></span><span> </span=
+></button></span></div><div id=3D"model-UploadDto" class=3D"model-container=
+" data-name=3D"UploadDto"><span class=3D"models-jump-to-path"></span><span =
 class=3D"model-box"><button aria-expanded=3D"false" class=3D"model-box-cont=
 rol"><span class=3D"pointer"><span class=3D"model-box"><span class=3D"model=
- model-title">UpdateJobDto</span></span></span><span class=3D"model-toggle =
-collapsed"></span><span> </span></button></span></div><div id=3D"model-Chan=
-geStatus" class=3D"model-container" data-name=3D"ChangeStatus"><span class=
+ model-title">UploadDto</span></span></span><span class=3D"model-toggle col=
+lapsed"></span><span> </span></button></span></div><div id=3D"model-ChangeA=
+dminCompany" class=3D"model-container" data-name=3D"ChangeAdminCompany"><sp=
+an class=3D"models-jump-to-path"></span><span class=3D"model-box"><button a=
+ria-expanded=3D"false" class=3D"model-box-control"><span class=3D"pointer">=
+<span class=3D"model-box"><span class=3D"model model-title">ChangeAdminComp=
+any</span></span></span><span class=3D"model-toggle collapsed"></span><span=
+> </span></button></span></div><div id=3D"model-CreateSkillDto" class=3D"mo=
+del-container" data-name=3D"CreateSkillDto"><span class=3D"models-jump-to-p=
+ath"></span><span class=3D"model-box"><button aria-expanded=3D"false" class=
+=3D"model-box-control"><span class=3D"pointer"><span class=3D"model-box"><s=
+pan class=3D"model model-title">CreateSkillDto</span></span></span><span cl=
+ass=3D"model-toggle collapsed"></span><span> </span></button></span></div><=
+div id=3D"model-CreateJobCatDto" class=3D"model-container" data-name=3D"Cre=
+ateJobCatDto"><span class=3D"models-jump-to-path"></span><span class=3D"mod=
+el-box"><button aria-expanded=3D"false" class=3D"model-box-control"><span c=
+lass=3D"pointer"><span class=3D"model-box"><span class=3D"model model-title=
+">CreateJobCatDto</span></span></span><span class=3D"model-toggle collapsed=
+"></span><span> </span></button></span></div><div id=3D"model-CreateWorkTyp=
+eDto" class=3D"model-container" data-name=3D"CreateWorkTypeDto"><span class=
 =3D"models-jump-to-path"></span><span class=3D"model-box"><button aria-expa=
 nded=3D"false" class=3D"model-box-control"><span class=3D"pointer"><span cl=
-ass=3D"model-box"><span class=3D"model model-title">ChangeStatus</span></sp=
-an></span><span class=3D"model-toggle collapsed"></span><span> </span></but=
-ton></span></div><div id=3D"model-createApplication" class=3D"model-contain=
-er" data-name=3D"createApplication"><span class=3D"models-jump-to-path"></s=
-pan><span class=3D"model-box"><button aria-expanded=3D"false" class=3D"mode=
-l-box-control"><span class=3D"pointer"><span class=3D"model-box"><span clas=
-s=3D"model model-title">createApplication</span></span></span><span class=
+ass=3D"model-box"><span class=3D"model model-title">CreateWorkTypeDto</span=
+></span></span><span class=3D"model-toggle collapsed"></span><span> </span>=
+</button></span></div><div id=3D"model-UpdateJobCat" class=3D"model-contain=
+er" data-name=3D"UpdateJobCat"><span class=3D"models-jump-to-path"></span><=
+span class=3D"model-box"><button aria-expanded=3D"false" class=3D"model-box=
+-control"><span class=3D"pointer"><span class=3D"model-box"><span class=3D"=
+model model-title">UpdateJobCat</span></span></span><span class=3D"model-to=
+ggle collapsed"></span><span> </span></button></span></div><div id=3D"model=
+-changeRoleDto" class=3D"model-container" data-name=3D"changeRoleDto"><span=
+ class=3D"models-jump-to-path"></span><span class=3D"model-box"><button ari=
+a-expanded=3D"false" class=3D"model-box-control"><span class=3D"pointer"><s=
+pan class=3D"model-box"><span class=3D"model model-title">changeRoleDto</sp=
+an></span></span><span class=3D"model-toggle collapsed"></span><span> </spa=
+n></button></span></div><div id=3D"model-AddSkillDto" class=3D"model-contai=
+ner" data-name=3D"AddSkillDto"><span class=3D"models-jump-to-path"></span><=
+span class=3D"model-box"><button aria-expanded=3D"false" class=3D"model-box=
+-control"><span class=3D"pointer"><span class=3D"model-box"><span class=3D"=
+model model-title">AddSkillDto</span></span></span><span class=3D"model-tog=
+gle collapsed"></span><span> </span></button></span></div><div id=3D"model-=
+CreateJobDto" class=3D"model-container" data-name=3D"CreateJobDto"><span cl=
+ass=3D"models-jump-to-path"></span><span class=3D"model-box"><button aria-e=
+xpanded=3D"false" class=3D"model-box-control"><span class=3D"pointer"><span=
+ class=3D"model-box"><span class=3D"model model-title">CreateJobDto</span><=
+/span></span><span class=3D"model-toggle collapsed"></span><span> </span></=
+button></span></div><div id=3D"model-UpdateJobDto" class=3D"model-container=
+" data-name=3D"UpdateJobDto"><span class=3D"models-jump-to-path"></span><sp=
+an class=3D"model-box"><button aria-expanded=3D"false" class=3D"model-box-c=
+ontrol"><span class=3D"pointer"><span class=3D"model-box"><span class=3D"mo=
+del model-title">UpdateJobDto</span></span></span><span class=3D"model-togg=
+le collapsed"></span><span> </span></button></span></div><div id=3D"model-C=
+hangeStatus" class=3D"model-container" data-name=3D"ChangeStatus"><span cla=
+ss=3D"models-jump-to-path"></span><span class=3D"model-box"><button aria-ex=
+panded=3D"false" class=3D"model-box-control"><span class=3D"pointer"><span =
+class=3D"model-box"><span class=3D"model model-title">ChangeStatus</span></=
+span></span><span class=3D"model-toggle collapsed"></span><span> </span></b=
+utton></span></div><div id=3D"model-createApplication" class=3D"model-conta=
+iner" data-name=3D"createApplication"><span class=3D"models-jump-to-path"><=
+/span><span class=3D"model-box"><button aria-expanded=3D"false" class=3D"mo=
+del-box-control"><span class=3D"pointer"><span class=3D"model-box"><span cl=
+ass=3D"model model-title">createApplication</span></span></span><span class=
 =3D"model-toggle collapsed"></span><span> </span></button></span></div><div=
  id=3D"model-applicationStatus" class=3D"model-container" data-name=3D"appl=
 icationStatus"><span class=3D"models-jump-to-path"></span><span class=3D"mo=
 del-box"><button aria-expanded=3D"false" class=3D"model-box-control"><span =
 class=3D"pointer"><span class=3D"model-box"><span class=3D"model model-titl=
 e">applicationStatus</span></span></span><span class=3D"model-toggle collap=
-sed"></span><span> </span></button></span></div> </div></section></section>=
-</div></div></div><div class=3D"wrapper"><section class=3D""></section></di=
-v></section></div>
+sed"></span><span> </span></button></span></div><div id=3D"model-CreateGrou=
+p" class=3D"model-container" data-name=3D"CreateGroup"><span class=3D"model=
+s-jump-to-path"></span><span class=3D"model-box"><button aria-expanded=3D"f=
+alse" class=3D"model-box-control"><span class=3D"pointer"><span class=3D"mo=
+del-box"><span class=3D"model model-title">CreateGroup</span></span></span>=
+<span class=3D"model-toggle collapsed"></span><span> </span></button></span=
+></div> </div></section></section></div></div></div><div class=3D"wrapper">=
+<section class=3D""></section></div></section></div>
 
 
 
@@ -2540,7 +2723,7 @@ v></section></div>
 
 
 </body></html>
-------MultipartBoundary--ToLlFl6Ow9TV0in6XwlbSpDqeMJ8cgkH1QP7tereNF----
+------MultipartBoundary--iVHTgu75Fo9PLl1ykS6TLLntBv0ab8vNykpAMBFt2F----
 Content-Type: text/css
 Content-Transfer-Encoding: quoted-printable
 Content-Location: http://localhost:3000/api/docs/swagger-ui.css
@@ -8179,27 +8362,27 @@ none; }
 
 html.dark-mode .swagger-ui section.models .models-control svg { fill: rgb(1=
 83, 188, 191); }
-------MultipartBoundary--ToLlFl6Ow9TV0in6XwlbSpDqeMJ8cgkH1QP7tereNF----
+------MultipartBoundary--iVHTgu75Fo9PLl1ykS6TLLntBv0ab8vNykpAMBFt2F----
 Content-Type: text/css
 Content-Transfer-Encoding: quoted-printable
-Content-Location: cid:css-21e4d0c9-cf94-4abf-b370-902bb46895d7@mhtml.blink
+Content-Location: cid:css-4c6e6e07-bcb6-42f9-8d55-cb73931fad12@mhtml.blink
 
 @charset "utf-8";
 
 .swagger-ui .topbar .download-url-wrapper { display: none; }
-------MultipartBoundary--ToLlFl6Ow9TV0in6XwlbSpDqeMJ8cgkH1QP7tereNF----
+------MultipartBoundary--iVHTgu75Fo9PLl1ykS6TLLntBv0ab8vNykpAMBFt2F----
 Content-Type: text/css
 Content-Transfer-Encoding: quoted-printable
-Content-Location: cid:css-b26b027f-79a9-4675-8e31-72ded9af46c8@mhtml.blink
+Content-Location: cid:css-a789b478-463d-4e2c-9a76-20a1f11700f7@mhtml.blink
 
 @charset "utf-8";
 
 .imageye-selected { outline: black solid 2px !important; box-shadow: rgba(0=
 , 0, 0, 0.5) 0px 0px 10px !important; }
-------MultipartBoundary--ToLlFl6Ow9TV0in6XwlbSpDqeMJ8cgkH1QP7tereNF----
+------MultipartBoundary--iVHTgu75Fo9PLl1ykS6TLLntBv0ab8vNykpAMBFt2F----
 Content-Type: text/css
 Content-Transfer-Encoding: quoted-printable
-Content-Location: cid:css-a6b30b87-a17e-486b-847a-ade83cac929e@mhtml.blink
+Content-Location: cid:css-90416ca9-5dcc-4a5d-812a-bdd9eab9aabf@mhtml.blink
 
 @charset "utf-8";
 
@@ -8208,4 +8391,4 @@ html { box-sizing: border-box; overflow-y: scroll; }
 *, ::before, ::after { box-sizing: inherit; }
 
 body { margin: 0px; background: rgb(250, 250, 250); }
-------MultipartBoundary--ToLlFl6Ow9TV0in6XwlbSpDqeMJ8cgkH1QP7tereNF------
+------MultipartBoundary--iVHTgu75Fo9PLl1ykS6TLLntBv0ab8vNykpAMBFt2F------

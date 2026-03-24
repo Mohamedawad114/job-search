@@ -1,5 +1,5 @@
 import { BullModule } from '@nestjs/bullmq';
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { RejectedProcessor } from './db.processor';
 import { rejectedApplicationsProducer } from './db.producer';
 import {
@@ -9,9 +9,12 @@ import {
   UserRepository,
 } from 'src/common/Repositories';
 import { notificationModel } from 'src/common/DB';
-
 @Module({
-  imports: [BullModule.registerQueue({ name: 'rejectedApplications' }),notificationModel],
+  imports: [
+    BullModule.registerQueue({ name: 'rejectedApplications' }),
+    notificationModel,
+ 
+  ],
   providers: [
     RejectedProcessor,
     rejectedApplicationsProducer,

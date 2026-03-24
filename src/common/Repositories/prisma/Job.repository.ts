@@ -20,5 +20,10 @@ export class JobRepository extends BaseRepository<
       return callback(tx as any);
     });
   }
-
+  async findOneJob(filter: object, options?: any) {
+    return this.model.findFirst({
+      where: filter,
+      ...options,
+    });
+  }
 }

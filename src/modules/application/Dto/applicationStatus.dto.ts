@@ -3,8 +3,8 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class applicationStatus {
   @ApiProperty({ type: [Number] })
-  @IsArray({ each: true })
-  @IsNumber({})
+  @IsArray()
+  @IsNumber({},{each:true})
   @IsPositive({ each: true })
   @IsNotEmpty()
   applyIds: number[];

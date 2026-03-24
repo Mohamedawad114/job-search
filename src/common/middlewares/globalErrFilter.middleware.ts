@@ -1,4 +1,5 @@
 import { ArgumentsHost, ExceptionFilter, HttpException } from '@nestjs/common';
+import { WsException } from '@nestjs/websockets';
 
 export class GlobalErrFilter implements ExceptionFilter {
   catch(exception: any, host: ArgumentsHost) {
@@ -25,6 +26,21 @@ export class GlobalErrFilter implements ExceptionFilter {
         stack: exception.stack,
         path: request.url,
       });
+    } else if (type === 'ws') {
+      const ctx = host.switchToWs();
+      const client = ctx.getClient();
+      if (exception instanceof WsException) {
+        const data = host.switchToWs().getData();
+        if (exception instanceof WsException) {
+          const error = exception.getError();
+          client.emit('error', {
+            success: false,
+            message: (error as any).message || error,
+            timestamp: new Date().toISOString(),
+            data,
+          });
+        }
+      }
     }
   }
 }

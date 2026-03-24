@@ -9,8 +9,9 @@ import {
   Query,
   ParseIntPipe,
   Patch,
+  Param,
 } from '@nestjs/common';
-import { Sys_Role } from '@prisma/client';
+import { Sys_Role } from 'src/common/Enum';
 import { type IUser } from 'src/common';
 import { Auth, AuthUser }from 'src/common/decorator'
 import { ProfileServices } from './profile.service';
@@ -36,7 +37,7 @@ import {
 
 @ApiTags('user profile')
 @Auth(Sys_Role.admin, Sys_Role.admin, Sys_Role.company_admin)
-@Controller('api/Profile')
+@Controller('Profile')
 export class ProfileController {
   constructor(private readonly profileService: ProfileServices) {}
 
@@ -98,7 +99,7 @@ export class ProfileController {
   addExp(@Body() Dto: AddExperienceDto, @AuthUser() user: IUser) {
     return this.profileService.addExperience(user, Dto);
   }
-  @Put('update-experience')
+  @Put('update-experience/:experienceId')
   @ApiOperation({ summary: 'update user experience information' })
   @ApiBody({ type: UpdateExperienceDto })
   @ApiQuery({ name: 'experienceId', type: Number })
@@ -107,16 +108,16 @@ export class ProfileController {
   updateExp(
     @Body() Dto: UpdateExperienceDto,
     @AuthUser() user: IUser,
-    @Query('experienceId', ParseIntPipe) expId: number,
+    @Param('experienceId', ParseIntPipe) expId: number,
   ) {
     return this.profileService.updateExperience(user, Dto, expId);
   }
-  @Delete('delete-experience')
+  @Delete('delete-experience/:experienceId')
   @ApiOperation({ summary: 'delete user experience' })
   @ApiQuery({ name: 'experienceId', type: Number })
   @ApiResponse({ status: 200, description: 'experience deleted' })
   deleteExp(
-    @Query('experienceId', ParseIntPipe) expId: number,
+    @Param('experienceId', ParseIntPipe) expId: number,
     @AuthUser() user: IUser,
   ) {
     return this.profileService.deleteExperience(user, expId);

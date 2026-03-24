@@ -21,7 +21,7 @@ import {
 @ApiTags('Work Types')
 @ApiBearerAuth()
 @Auth(Sys_Role.user, Sys_Role.admin, Sys_Role.company_admin)
-@Controller('category')
+@Controller('workType')
 export class WorkTypeController {
   constructor(private readonly workTypeService: WorkTypeService) {}
 

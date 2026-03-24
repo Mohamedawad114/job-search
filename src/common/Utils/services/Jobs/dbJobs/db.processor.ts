@@ -1,6 +1,11 @@
 import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   ApplicationRepository,
   JobRepository,
@@ -12,10 +17,9 @@ import {
   JobStatus,
   NotificationType,
 } from 'src/common/Enum';
-
 import { PinoLogger } from 'nestjs-pino';
 import { notificationHandler } from 'src/common/helpers';
-
+import { EventEmitter2 } from '@nestjs/event-emitter';
 @Processor('rejectedApplications')
 @Injectable()
 export class RejectedProcessor extends WorkerHost {
@@ -25,7 +29,7 @@ export class RejectedProcessor extends WorkerHost {
     private readonly notificationRepo: NotificationRepository,
     private readonly userRepo: UserRepository,
     private readonly logger: PinoLogger,
-    // private readonly gateway: NotificationGateway,
+    private readonly eventEmitter: EventEmitter2,
   ) {
     super();
   }
@@ -45,13 +49,14 @@ export class RejectedProcessor extends WorkerHost {
     }
   }
 
-  // ---  رفض الطلبات ---
+  
   private async handleRejectedApplications(data: any) {
     const { applicationIds, jobId } = data;
-    await this.applicationRepo.updateMany(
-      { id: { nin: applicationIds }, jobId: jobId },
-      { status: ApplicationStatusEnum.REJECTED },
-    );
+   const app = await this.applicationRepo.updateMany(
+     { id: { notIn: applicationIds }, jobId: jobId },
+     { status: ApplicationStatusEnum.REJECTED },
+   );
+    this.logger.info(app)
     return { success: true, rejectedCount: applicationIds.length };
   }
 
@@ -72,22 +77,26 @@ export class RejectedProcessor extends WorkerHost {
       },
     );
     if (!job) throw new NotFoundException('job not found |closed');
-    const { jobId, jobTitle, maxCount, adminId } = data;
-    const { title, content } = notificationHandler(
-      NotificationType.JOB_CAPACITY_FULL,
-      { jobTitle, maxCount },
-    );
-
-    await this.notificationRepo.insert({
-      userId: adminId,
-      title,
-      content,
-    });
-    await this.jobRepo.updateById(jobId, { status: JobStatus.closed });
-    // 3. Socket.io
-    // this.gateway.sendToUser(adminId, { title, content });
-
-    this.logger.info(`Job ${jobId} closed due to capacity limit.`);
+    if (job.applicationCount >= job.maxNumApplication) {
+      const { id, position, maxNumApplication } = job;
+      const { title, content } = notificationHandler(
+        NotificationType.JOB_CAPACITY_FULL,
+        { jobTitle: position, maxCount: maxNumApplication },
+      );
+      const notification = await this.notificationRepo.insert({
+        userId: job.company.adminId,
+        title,
+        content,
+      });
+      await this.jobRepo.updateById(id, { status: JobStatus.closed });
+      this.eventEmitter.emit('notification.send', {
+        userId: job.company.adminId,
+        notification,
+      });
+      this.logger.info(`Job ${job.id} closed due to capacity limit.`);
+      return { success: true };
+    }
+    this.logger.info(`Job ${job.id} not closed .`);
     return { success: true };
   }
   private async JobPosted(data: any) {
@@ -101,10 +110,14 @@ export class RejectedProcessor extends WorkerHost {
         NotificationType.NEW_JOB_POSTED,
         { companyName, jobTitle: jobPosition },
       );
-      await this.notificationRepo.insert({
+      const notification = await this.notificationRepo.insert({
         userId: user.id,
         title,
         content,
+      });
+      this.eventEmitter.emit('notification.send', {
+        userId: user.id,
+        notification: notification,
       });
     });
   }
@@ -113,7 +126,7 @@ export class RejectedProcessor extends WorkerHost {
   handleCompleted(job: Job) {
     this.logger.info(`Job ${job.id} (${job.name}) completed successfully`);
   }
-  @OnWorkerEvent('completed')
+  @OnWorkerEvent('failed')
   handleFailed(job: Job, err: Error) {
     this.logger.error(`Job ${job.id} failed: ${err.message}`);
   }

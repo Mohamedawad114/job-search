@@ -44,7 +44,7 @@ export class JobController {
   }
 
   @Auth(Sys_Role.company_admin)
-  @Put('update-job/:id')
+  @Put('update/:id')
   @HttpCode(200)
   @ApiOperation({ summary: 'Update a job by ID' })
   @ApiParam({ name: 'id', type: Number, description: 'Job ID' })
@@ -53,7 +53,7 @@ export class JobController {
   updateJob(
     @Body() data: UpdateJobDto,
     @AuthUser() user: IUser,
-    @Param('id') jobId: number,
+    @Param('id',ParseIntPipe) jobId: number,
   ) {
     return this.jobService.updateJob(user, jobId, data);
   }
@@ -64,20 +64,11 @@ export class JobController {
   @ApiParam({ name: 'id', type: Number, description: 'Job ID' })
   @ApiResponse({ status: 200, description: 'Status changed successfully' })
   changeStatus(
-    @Param('id') id: number,
+    @Param('id',ParseIntPipe) id: number,
     @AuthUser() user: IUser,
     @Body() status: ChangeStatus,
   ) {
     return this.jobService.changeJobStatus(user, id, status);
-  }
-
-  @Get(':id')
-  @ApiOperation({ summary: 'Get job details by ID' })
-  @ApiParam({ name: 'id', type: Number, description: 'Job ID' })
-  @ApiResponse({ status: 200, description: 'Job details returned' })
-  @ApiResponse({ status: 404, description: 'Job not found' })
-  jobDetails(@Param('id') id: number) {
-    return this.jobService.getJobDetails(id);
   }
 
   @Get('/search')
@@ -103,5 +94,13 @@ export class JobController {
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
   ) {
     return this.jobService.AllJobs(page, limit);
+  }
+  @Get(':id')
+  @ApiOperation({ summary: 'Get job details by ID' })
+  @ApiParam({ name: 'id', type: Number, description: 'Job ID' })
+  @ApiResponse({ status: 200, description: 'Job details returned' })
+  @ApiResponse({ status: 404, description: 'Job not found' })
+  jobDetails(@Param('id',ParseIntPipe) id: number) {
+    return this.jobService.getJobDetails(id);
   }
 }

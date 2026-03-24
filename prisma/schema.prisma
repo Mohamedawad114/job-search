@@ -80,7 +80,7 @@ model Company {
   adminId Int @unique
   logo String?
   description String
-  email String 
+  email String @unique
   website String?
   address String
   formatAddress String?

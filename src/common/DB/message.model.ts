@@ -14,6 +14,8 @@ export class Message implements IMessage {
   content: string;
   @Prop({ type: Boolean, default: false })
   isRead: boolean;
+  @Prop({ type: Number, required: true })
+  senderId: number;
   createdAt: Date;
   updatedAt: Date;
 }

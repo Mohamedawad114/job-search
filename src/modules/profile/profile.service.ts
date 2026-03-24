@@ -42,14 +42,16 @@ export class ProfileServices {
   ) {}
 
   getProfile = async (user: IUser) => {
-    const userProfile = await this.userRepo.findOne({
-     id: user.id },
+    const userProfile = await this.userRepo.findOne(
+      {
+        id: user.id,
+      },
       {
         include: {
           education: true,
           experiences: true,
         },
-      }
+      },
     );
     const phone = user?.phoneNumber
       ? this.crypto.decryption(user.phoneNumber)
@@ -110,7 +112,7 @@ export class ProfileServices {
 
   addEducation = async (user: IUser, Dto: AddEducationDto) => {
     const userEdu = await this.educationRepo.findOne({
-    userId: user.id ,
+      userId: user.id,
     });
     if (userEdu) throw new ConflictException('user education already exist');
     const start = new Date(Dto.startDate);
@@ -196,8 +198,8 @@ export class ProfileServices {
   addUserSkill = async (user: IUser, Dto: AddUserSkill) => {
     const IsSkillExist = await this.skillRepo.findById(Dto.skillId);
     if (!IsSkillExist) throw new NotFoundException('skill not exist');
-    const existing = await this.userSkillRepo.findOne({
-      id: Dto.skillId,
+    const existing = await this.userSkillRepo.findOneUSerSkill({
+      skillId: Dto.skillId,
       userId: user.id,
     });
     if (existing) throw new ConflictException('skill already added');

@@ -6,25 +6,32 @@ export class MapService {
   constructor(private readonly http: HttpService) {}
 
   async geocoding(address: string) {
+    const cleanAddress = address.trim();
     const response = await this.http.axiosRef.get(
-      'https://maps.googleapis.com/maps/api/geocode/json',
+      'https://api.opencagedata.com/geocode/v1/json',
       {
         params: {
-          address,
-          key: process.env.MAPS_API,
+          q: cleanAddress, 
+          key: process.env.MAPS_API as string,
+          language: 'en',
+          region: 'eg',
         },
       },
     );
 
-    const result = response.data.results[0];
+    const { results, status } = response.data;
 
-    if (!result) {
-      throw new BadRequestException('Invalid address');
+    if (!results || results.length === 0 || status.code !== 200) {
+      throw new BadRequestException(
+        `Invalid address: ${status?.message || 'unknown error'}`,
+      );
     }
+
+    const result = results[0];
     return {
-      formattedAddress: result.formatted_address,
-      lat: result.geometry.location.lat,
-      lng: result.geometry.location.lng,
+      formattedAddress: result.formatted,
+      lat: result.geometry.lat,
+      lng: result.geometry.lng,
     };
   }
 }

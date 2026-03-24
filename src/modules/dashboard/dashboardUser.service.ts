@@ -8,6 +8,7 @@ import {
 } from 'src/common';
 import { changeRoleDto } from './Dto';
 import { EmailProducer, redis } from 'src/common/Utils/services';
+import { Gateway } from '../gateway/gateway';
 
 @Injectable()
 export class UserDashboard {
@@ -15,11 +16,13 @@ export class UserDashboard {
     private readonly userRepo: UserRepository,
     private readonly emailQueue: EmailProducer,
     private readonly NotificationRepo: NotificationRepository,
+        private readonly SocketGateway: Gateway,
+    
   ) {}
   BanUser = async (userId: number) => {
     const User = await this.userRepo.findById(userId);
     if (!User) throw new NotFoundException('user not found');
-    await this.userRepo.updateById(User._id, { isBaned: true });
+    await this.userRepo.updateById(User.id, { isBaned: true });
     await redis.sadd('banned_users', userId.toString());
     await this.emailQueue.sendEmailJob(emailType.BanedUser, User.email);
     return { message: 'user banned successfully' };
@@ -69,13 +72,12 @@ export class UserDashboard {
       NotificationType.ROLE_CHANGED_TO_ADMIN,
       {},
     );
-    const Notifications = await this.NotificationRepo.insert({
+    const notification = await this.NotificationRepo.insert({
       userId: userId,
       title: title,
       content: content,
     });
-    //socket
-
+await this.SocketGateway.sendNotification({userId:userId,notification:notification})
     return {
       message: 'user role updated',
     };

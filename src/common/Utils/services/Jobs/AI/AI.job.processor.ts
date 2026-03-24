@@ -8,8 +8,14 @@ import {
 } from 'src/common/Repositories';
 import { AIService } from 'src/modules/AI/ai.service';
 import { CvExtractorService } from '../../pdf-parser';
+import { NotFoundException } from '@nestjs/common';
 
-@Processor('AIAnalysis')
+@Processor('AIAnalysis', {
+  limiter: {
+    max: 2,
+    duration: 60000,
+  },
+})
 export class AIAnalysisProcessor extends WorkerHost {
   constructor(
     private applicationRepo: ApplicationRepository,
@@ -21,6 +27,7 @@ export class AIAnalysisProcessor extends WorkerHost {
   ) {
     super();
   }
+
   async process(job: Job) {
     const { applicationId } = job.data;
     const application = await this.applicationRepo.findById(applicationId, {
@@ -36,14 +43,47 @@ export class AIAnalysisProcessor extends WorkerHost {
         },
       },
     });
-    const cvText = await this.cvExtractSErvice.extractText(application.cvUrl);
+    if (!application) {
+      throw new NotFoundException(`Application not found: ${applicationId}`);
+    }
+    let cvText: string;
+    try {
+      cvText = await this.cvExtractSErvice.extractText(application.CV);
+    } catch (error) {
+      this.logger.error(
+        {
+          err: error,
+          message: error?.message,
+          stack: error?.stack,
+          cvUrl: application.CV,
+        },
+        'Failed to extract CV text',
+      );
+      throw error;
+    }
+
     const skills = application.job.skills.map((s) => s.skill.skill);
-    const result = await this.aiService.analyzeCV(
-      cvText,
-      application.job.description,
-      application.job.position,
-      skills,
-    );
+    let result: Awaited<ReturnType<typeof this.aiService.analyzeCV>>;
+    try {
+      result = await this.aiService.analyzeCV(
+        cvText,
+        application.job.description,
+        application.job.position,
+        skills,
+      );
+    } catch (error) {
+      this.logger.error(
+        {
+          err: error,
+          message: error?.message,
+          stack: error?.stack,
+          applicationId,
+        },
+        'AI analysis failed',
+      );
+      throw error;
+    }
+
     const analysis = await this.AIReportRepo.create({
       application: {
         connect: { id: applicationId },
@@ -62,13 +102,17 @@ export class AIAnalysisProcessor extends WorkerHost {
       });
     }
   }
+
   @OnWorkerEvent('completed')
   handleCompleted(job: Job) {
-    this.logger.info(`Job ${job.id} completed successfully`);
+    this.logger.info({ jobId: job.id }, 'Job completed successfully');
   }
 
   @OnWorkerEvent('failed')
   handleFailed(job: Job, err: Error) {
-    this.logger.error(`Job ${job.id} failed: ${err.message}`);
+    this.logger.error(
+      { jobId: job.id, err, message: err?.message, stack: err?.stack },
+      'Job failed',
+    );
   }
 }

@@ -35,7 +35,7 @@ export class BaseRepository<
 
   async update(filter: object, data: UpdateDto, options?: any) {
     return this.model.update({
-      where: filter ,
+      where: filter,
       data,
       ...options,
     });
@@ -70,8 +70,8 @@ export class BaseRepository<
   }
   async count(options?: any) {
     return this.model.count({
-      where:options
-    })
+      ...options,
+    });
   }
 }
 type PrismaModelDelegate = {
@@ -82,5 +82,5 @@ type PrismaModelDelegate = {
   updateMany(args: any): any;
   delete(args: any): any;
   deleteMany(args: any): any;
-  count(args?:any):any
+  count(args?: any): any;
 };

@@ -1,4 +1,5 @@
 import {
+  IsArray,
   IsEnum,
   IsNotEmpty,
   IsNumber,
@@ -6,9 +7,11 @@ import {
   IsPositive,
   IsString,
   Length,
+  ValidateNested,
 } from 'class-validator';
 import { jobType, Location, skillsLevel } from 'src/common/Enum';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 
 class AddSkillDto {
   @ApiProperty()
@@ -50,6 +53,10 @@ export class CreateJobDto {
   categoryId: number;
 
   @ApiProperty({ type: [AddSkillDto] })
+  @IsArray() 
+  @IsNotEmpty()
+  @ValidateNested({ each: true }) 
+    @Type(()=>AddSkillDto)
   skills: AddSkillDto[];
 
   @ApiProperty()

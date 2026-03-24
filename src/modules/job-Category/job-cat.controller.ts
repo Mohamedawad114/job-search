@@ -23,7 +23,7 @@ import {
 @ApiTags('Job Categories')
 @ApiBearerAuth()
 @Auth(Sys_Role.company_admin, Sys_Role.user)
-@Controller('api/job-category')
+@Controller('job-category')
 export class JobCatController {
   constructor(private readonly jobCatService: JobCatService) {}
 
@@ -40,7 +40,7 @@ export class JobCatController {
     return this.jobCatService.allCategories(page, limit);
   }
 
-  @Get('/:id/all-jobs')
+  @Get('/:id/jobs')
   @ApiOperation({ summary: 'Get all jobs for a specific category' })
   @ApiParam({ name: 'id', type: Number, description: 'Category ID' })
   @ApiQuery({ name: 'page', type: Number, required: false, example: 1 })

@@ -96,7 +96,7 @@ export class JobService {
   updateJob = async (user: IUser, jobId: number, Dto: UpdateJobDto) => {
     const company = await this.companyRepo.findOne({ adminId: user.id });
     if (!company) throw new NotFoundException('company not found');
-    const job = await this.jobRepo.findOne({
+    const job = await this.jobRepo.findOneJob({
       id: jobId,
       companyId: company.id,
     });
@@ -110,6 +110,14 @@ export class JobService {
         });
         if (skillRecords.length !== skillIds.length)
           throw new NotFoundException('Some skills not found');
+        if (Dto.removedSkills) {
+          await tx.jobSkill.deleteMany({
+            where: {
+              id: { in: Dto.removedSkills },
+              jobId: jobId,
+            },
+          });
+        }
         await tx.jobSkill.createMany({
           data: Dto.skills.map((s) => ({
             jobId: jobId,
@@ -117,15 +125,6 @@ export class JobService {
             level: s.level,
           })),
           skipDuplicates: true,
-        });
-      }
-
-      if (Dto.removedSkills) {
-        await tx.jobSkill.deleteMany({
-          where: {
-            skillId: { in: Dto.removedSkills },
-            jobId: jobId,
-          },
         });
       }
       const updateData: any = { ...Dto };
@@ -182,11 +181,14 @@ export class JobService {
   getJobDetails = async (jobId: number) => {
     const cached = await redis.get(redisKeys.jobDetails(jobId));
     if (cached) return { message: 'job Details', data: JSON.parse(cached) };
-    const job = await this.jobRepo.findById(jobId, {
-      include: {
-        skills: true,
+    const job = await this.jobRepo.findOne(
+      { id: jobId, status: JobStatus.open },
+      {
+        include: {
+          skills: true,
+        },
       },
-    });
+    );
     if (!job) throw new NotFoundException('job not found');
     await redis.set(
       redisKeys.jobDetails(jobId),
@@ -196,8 +198,10 @@ export class JobService {
     );
     return { message: 'job Details', data: job };
   };
-  searchJobs = async (filter: SearchDto, limit: number, page: number) => {
-    const cached = await redis.get(redisKeys.allJobs(page, limit, filter));
+  searchJobs = async (filter: SearchDto, page: number, limit: number) => {
+    const cached = await redis.get(
+      redisKeys.allJobs(page, limit, JSON.stringify(filter)),
+    );
     if (cached) {
       const { jobs, total } = JSON.parse(cached);
       return {
@@ -212,25 +216,27 @@ export class JobService {
       ...(filter.type && { type: filter.type }),
       ...(filter.search && {
         OR: [
-          { position: { contains: filter.search, mode: 'insensitive' } },
-          { description: { contains: filter.search, mode: 'insensitive' } },
+          { position: { contains: filter.search } },
+          { description: { contains: filter.search } },
         ],
       }),
       ...(filter.skills && {
         skills: { some: { skillId: { in: filter.skills } } },
       }),
     };
-    const [jobs, total] = await Promise.all([
+    const [jobs,total] = await Promise.all([
       this.jobRepo.findAll({
         where: where,
+        select: { position: true, description: true, id: true,companyId:true },
         skip: offset,
         take: limit,
       }),
-      this.jobRepo.count({ where }),
+      this.jobRepo.count({ where: where }),
     ]);
+
     if (!jobs.length) return { message: 'no jobs found ' };
     await redis.set(
-      redisKeys.allJobs(page, limit, filter),
+      redisKeys.allJobs(page, limit, JSON.stringify(filter)),
       JSON.stringify({ jobs, total }),
       'EX',
       60 * 60 * 12,
@@ -238,7 +244,7 @@ export class JobService {
     return {
       message: 'jobs found',
       data: jobs,
-      meta: { total, pages: Math.ceil(total / limit) },
+   meta: { total, pages: Math.ceil(total / limit) },
     };
   };
   AllJobs = async (page: number, limit: number) => {
@@ -254,6 +260,19 @@ export class JobService {
     const [jobs, total] = await Promise.all([
       this.jobRepo.findAll({
         where: { status: JobStatus.open },
+        select: {
+          id: true,
+          position: true,
+          description: true,
+          type: true,
+          location: true,
+          companyId: true,
+          categoryId: true,
+          applicationCount: true,
+          status: true,
+          createdAt: true,
+          updatedAt: true,
+        },
         orderBy: { createdAt: 'desc' },
         skip: offset,
         take: limit,

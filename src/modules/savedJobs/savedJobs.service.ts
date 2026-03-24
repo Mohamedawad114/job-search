@@ -10,7 +10,7 @@ export class SavedJobService {
   addToSavedJobs = async (jobId: number, user: IUser) => {
     const job = await this.jobRepo.findOne({ id: jobId });
     if (!job) throw new NotFoundException('Job not found');
-    const isSavedJob = await this.savedJobRepo.findOne({
+    const isSavedJob = await this.savedJobRepo.findOneSavedJob({
       jobId: jobId,
       userId: user.id,
     });
@@ -25,8 +25,10 @@ export class SavedJobService {
     const job = await this.jobRepo.findOne({ id: jobId });
     if (!job) throw new NotFoundException('Job not found');
     const deletedJob = await this.savedJobRepo.delete({
-      jobId: jobId,
-      userId: user.id,
+      userId_jobId: {
+        jobId: jobId,
+        userId: user.id,
+      }
     });
     if (!deletedJob) throw new NotFoundException('Saved job not found');
     return { message: 'Job removed successfully', data: deletedJob };

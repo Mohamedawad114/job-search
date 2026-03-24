@@ -4,7 +4,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import {  HashingService, IUser, UserRepository } from 'src/common';
+import { HashingService, IUser, UserRepository } from 'src/common';
 import {
   EmailProducer,
   redis,
@@ -12,7 +12,7 @@ import {
   s3_services,
   TokenServices,
 } from 'src/common/Utils/services/index';
-import{File,emailType} from 'src/common/Enum'
+import { File, emailType } from 'src/common/Enum';
 import { Request, Response } from 'express';
 import {
   ResetPasswordDto,
@@ -90,7 +90,7 @@ export class AccountServices {
     if (type.file == File.image) key = `users/${userId}`;
     key = `users/${userId}/cv`;
     const { Key, url } = await this.s3service.upload_file(key);
-    return { message: 'upload url generated', data: { Key, url } };
+    return { message: 'upload url generated', data: { key: key, url: url } };
   };
 
   updateUpload = async (Dto: UpdateUploadDto, user: IUser) => {

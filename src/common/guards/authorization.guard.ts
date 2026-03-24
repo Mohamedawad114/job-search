@@ -1,16 +1,9 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  SetMetadata,
-} from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { Reflector } from '@nestjs/core';
 @Injectable()
 export class RolesGuard implements CanActivate {
-  constructor(
-    private  reflector: Reflector,
-  ) {}
+  constructor(private reflector: Reflector) {}
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
@@ -19,8 +12,10 @@ export class RolesGuard implements CanActivate {
     if (type === 'http') {
       const request = context.switchToHttp().getRequest();
       user = request.user;
+    } else if (type === 'ws') {
+      const client = context.switchToWs().getClient();
+      user = client.data.user;
     }
-    const request = context.switchToHttp().getRequest();
     const methodRoles = this.reflector.get<string[]>(
       'roles',
       context.getHandler(),
@@ -30,7 +25,7 @@ export class RolesGuard implements CanActivate {
       context.getClass(),
     );
     const allowedRoles = methodRoles || classRoles;
-    const userRoles = request.user.role;
+    const userRoles = user.role;
     if (allowedRoles && allowedRoles.includes(userRoles)) return true;
     return false;
   }

@@ -1,7 +1,15 @@
-import { Body, Controller, HttpCode, Patch, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Patch,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { type IUser } from 'src/common';
 import { Sys_Role } from 'src/common/Enum';
-import { Auth, AuthUser }from 'src/common/decorator'
+import { Auth, AuthUser } from 'src/common/decorator';
 import { CompanyService } from './company.service';
 import {
   ChangeAdminCompany,
@@ -18,7 +26,7 @@ import {
 } from '@nestjs/swagger';
 
 @Auth(Sys_Role.company_admin)
-@Controller('api/admin/company')
+@Controller('admin/company')
 export class AdminCompanyController {
   constructor(private readonly companyService: CompanyService) {}
   @Auth(Sys_Role.user)
@@ -32,6 +40,12 @@ export class AdminCompanyController {
   @ApiBadRequestResponse({ description: 'work Type not exist' })
   createCompany(@Body() data: CreateCompanyDto, @AuthUser() user: IUser) {
     return this.companyService.createCompanyAccount(data, user);
+  }
+  @Get('/upload-logo')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'get url for upload logo' })
+  uploadLogo(@AuthUser() user: IUser) {
+    return this.companyService.getUploadUrl(user);
   }
   @Put('/update')
   @HttpCode(200)
@@ -47,6 +61,7 @@ export class AdminCompanyController {
   }
   @Patch('/update-logo')
   @HttpCode(200)
+  @ApiOperation({ summary: 'update  logo' })
   updateCompanyLogo(@Body() data: UploadDto, @AuthUser() user: IUser) {
     return this.companyService.updateUpload(data, user);
   }

@@ -11,3 +11,5 @@ export * from './application/application .module';
 export * from './Reports/report.module';
 export * from './AI/ai.module';
 export * from './notification/notification.module';
+export * from './gateway/gateway.module';
+export *from './chat/chat.module'

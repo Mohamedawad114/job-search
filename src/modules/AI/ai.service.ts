@@ -1,39 +1,71 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import openAI from 'openai';
-import { buildCvPrompt } from './ai.prompt';
 import { ConfigService } from '@nestjs/config';
+import { buildCvPrompt, systemInstructions } from './ai.prompt';
+import { PinoLogger } from 'nestjs-pino';
+import Groq from 'groq-sdk';
+
+export interface AnalysisResult {
+  atsScore: number;
+  summary: string;
+  strengths: string[];
+  weaknesses: string[];
+  decision: 'ACCEPT' | 'REVIEW' | 'REJECT';
+  skills: { name: string; matchScore: number }[];
+}
 
 @Injectable()
 export class AIService implements OnModuleInit {
-  private openai: openAI;
+  private client: Groq;
 
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly logger: PinoLogger,
+  ) {}
+
   onModuleInit() {
-    const apiKey = this.configService.get<string>('OPEN_AI_KEY');
-    if (!apiKey) {
-      throw new Error('OPEN_AI_KEY is missing from environment variables');
-    }
-    this.openai = new openAI({ apiKey });
+    const apiKey = this.configService.getOrThrow<string>('GROQ_API');
+    this.client = new Groq({ apiKey });
+    this.logger.info('Groq client initialized');
   }
+
   async analyzeCV(
     cvText: string,
     jobDescription: string,
     position: string,
     skills: string[],
-  ) {
+  ): Promise<AnalysisResult> {
     const prompt = buildCvPrompt(cvText, jobDescription, position, skills);
-    const response = await this.openai.chat.completions.create({
-      model: 'gpt-4.1-mini',
-      messages: [
-        {
-          role: 'user',
-          content: prompt,
-        },
-      ],
-      temperature: 0.2,
-    });
-    const content = response.choices[0].message.content;
+    return this.generateWithRetry(prompt);
+  }
 
-    return JSON.parse(content as unknown as string);
+  private async generateWithRetry(
+    prompt: string,
+    attempt = 0,
+  ): Promise<AnalysisResult> {
+    try {
+      const completion = await this.client.chat.completions.create({
+        model: 'llama-3.3-70b-versatile',
+        messages: [
+          { role: 'system', content: systemInstructions },
+          { role: 'user', content: prompt },
+        ],
+        response_format: { type: 'json_object' },
+        temperature: 0.3,
+      });
+
+      const text = completion.choices[0].message.content!;
+
+      return JSON.parse(text) as AnalysisResult;
+    } catch (err) {
+      if (err?.status === 429 && attempt < 2) {
+        this.logger.warn(
+          `Rate limited, waiting 60s... (attempt ${attempt + 1})`,
+        );
+        await new Promise((r) => setTimeout(r, 60_000));
+        return this.generateWithRetry(prompt, attempt + 1);
+      }
+      this.logger.error(`AI Analysis failed: ${err.message}`);
+      throw err;
+    }
   }
 }

@@ -8,6 +8,7 @@ import {
   Query,
   Headers,
   ParseIntPipe,
+  DefaultValuePipe,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -55,7 +56,7 @@ export class ApplicationController {
     );
   }
   @Auth(Sys_Role.user)
-  @Get('my-applications')
+  @Get('all')
   @ApiOperation({ summary: 'Get all applications for the logged-in user' })
   @ApiQuery({ name: 'page', required: false, example: 1 })
   @ApiQuery({ name: 'limit', required: false, example: 10 })
@@ -65,8 +66,8 @@ export class ApplicationController {
   })
   async getUserApplications(
     @AuthUser() user: IUser,
-    @Query('page', ParseIntPipe) page: number = 1,
-    @Query('limit', ParseIntPipe) limit: number = 10,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
   ) {
     return await this.applicationService.allUserApplications(user, page, limit);
   }
@@ -81,8 +82,8 @@ export class ApplicationController {
   async getJobApplications(
     @AuthUser() user: IUser,
     @Param('jobId', ParseIntPipe) jobId: number,
-    @Query('page', ParseIntPipe) page: number = 1,
-    @Query('limit', ParseIntPipe) limit: number = 10,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
   ) {
     return await this.applicationService.allJobApplications(
       user,
@@ -103,13 +104,13 @@ export class ApplicationController {
     return await this.applicationService.getSpecApply(user, applyId);
   }
   @Auth(Sys_Role.company_admin)
-  @Patch(':jobId/status-change')
+  @Patch(':jobId/accept')
   @ApiOperation({
     summary: 'accept of applications of spec job  and notify users',
   })
   @ApiBody({ type: applicationStatus })
   @ApiParam({ name: 'jobId', type: Number })
-  async changeStatus(
+  async acceptApplications(
     @Body() data: applicationStatus,
     @Param('jobId', ParseIntPipe) jobId: number,
     @AuthUser() user: IUser,

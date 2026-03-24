@@ -24,7 +24,7 @@ import { Throttle } from '@nestjs/throttler';
 import { ConfirmEmailDto, LoginDto, ResendOtpDto, signupDto } from './Dto';
 
 @ApiTags('Auth')
-@Controller('api/Auth')
+@Controller('Auth')
 export class AuthController {
   constructor(private readonly authServices: AuthService) {}
 

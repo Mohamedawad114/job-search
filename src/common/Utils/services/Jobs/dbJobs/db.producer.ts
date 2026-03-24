@@ -10,13 +10,13 @@ export class rejectedApplicationsProducer {
   ) {}
   async sendRejectedApplications(setOfApplyIds: number[], jobId: number) {
     await this.dbQueue.add(
-      'rejectApplications',
+      'reject_others',
       {
         applicationIds: setOfApplyIds,
         jobId: jobId,
       },
       {
-        attempts: 3,
+        attempts: 1,
         removeOnFail: false,
         removeOnComplete: true,
       },

@@ -1,260 +1,169 @@
+# 🚀 Job Search Platform (AI-Powered) – Backend
 
-File Tree: job-search
+A scalable and production-ready backend system for a job search platform built with **NestJS**, designed to handle real-world use cases including AI-powered CV analysis, real-time communication, and advanced job matching.
 
-├── 📁 config/
-│   ├── ⚙️ dev.env
-│   └── 📄 swagger.ts
-├── 📁 prisma/
-│   ├── 📁 migrations/
-│   │   ├── 📁 20260315131314_init/
-│   │   │   └── 📄 migration.sql
-│   │   └── ⚙️ migration_lock.toml
-│   └── 📄 schema.prisma
-├── 📁 src/
-│   ├── 📁 common/
-│   │   ├── 📁 DB/
-│   │   │   ├── 📄 conversation.model.ts
-│   │   │   ├── 📄 index.ts
-│   │   │   ├── 📄 message.model.ts
-│   │   │   └── 📄 notification.model.ts
-│   │   ├── 📁 Enum/
-│   │   │   ├── 📄 User.enum.ts
-│   │   │   ├── 📄 application.enum.ts
-│   │   │   ├── 📄 education.enum.ts
-│   │   │   ├── 📄 emailType.enum.ts
-│   │   │   ├── 📄 index.ts
-│   │   │   ├── 📄 job.enum.ts
-│   │   │   ├── 📄 jobFilter.enum.ts
-│   │   │   ├── 📄 notification.enum.ts
-│   │   │   └── 📄 typeSearch.enum.ts
-│   │   ├── 📁 Interfaces/
-│   │   │   ├── 📄 AI.interfaces.ts
-│   │   │   ├── 📄 User.interface.ts
-│   │   │   ├── 📄 application.interface.ts
-│   │   │   ├── 📄 chat.interface.ts
-│   │   │   ├── 📄 company.interface.ts
-│   │   │   ├── 📄 education.interface.ts
-│   │   │   ├── 📄 email.interface.ts
-│   │   │   ├── 📄 experience.interface.ts
-│   │   │   ├── 📄 index.ts
-│   │   │   ├── 📄 job.interface.ts
-│   │   │   ├── 📄 notification.interface.ts
-│   │   │   ├── 📄 token.interface.ts
-│   │   │   └── 📄 userSkills.interface.ts
-│   │   ├── 📁 Repositories/
-│   │   │   ├── 📁 mongo/
-│   │   │   │   ├── 📄 Base.repository.ts
-│   │   │   │   ├── 📄 chat.repository.ts
-│   │   │   │   ├── 📄 index.ts
-│   │   │   │   └── 📄 notification.repository.ts
-│   │   │   ├── 📁 prisma/
-│   │   │   │   ├── 📄 Base.repository.ts
-│   │   │   │   ├── 📄 Job.repository.ts
-│   │   │   │   ├── 📄 JobCategory.repository.ts
-│   │   │   │   ├── 📄 application.repository.ts
-│   │   │   │   ├── 📄 company.repository.ts
-│   │   │   │   ├── 📄 education.repository.ts
-│   │   │   │   ├── 📄 experience.repository.ts
-│   │   │   │   ├── 📄 index.ts
-│   │   │   │   ├── 📄 jobSkills.repository.ts
-│   │   │   │   ├── 📄 report.repository.ts
-│   │   │   │   ├── 📄 savedJobs.repository.ts
-│   │   │   │   ├── 📄 skill.repository.ts
-│   │   │   │   ├── 📄 user.repository.ts
-│   │   │   │   ├── 📄 userSkills.repository.ts
-│   │   │   │   └── 📄 workType.repository.ts
-│   │   │   └── 📄 index.ts
-│   │   ├── 📁 Utils/
-│   │   │   ├── 📁 Hashing/
-│   │   │   │   └── 📄 hash.service.ts
-│   │   │   ├── 📁 crypto/
-│   │   │   │   └── 📄 crypto.service.ts
-│   │   │   ├── 📁 services/
-│   │   │   │   ├── 📁 Jobs/
-│   │   │   │   │   ├── 📁 AI/
-│   │   │   │   │   │   ├── 📄 AI.job.module.ts
-│   │   │   │   │   │   ├── 📄 AI.job.processor.ts
-│   │   │   │   │   │   └── 📄 AI.job.producer.ts
-│   │   │   │   │   ├── 📁 dbJobs/
-│   │   │   │   │   │   ├── 📄 db.module.ts
-│   │   │   │   │   │   ├── 📄 db.processor.ts
-│   │   │   │   │   │   └── 📄 db.producer.ts
-│   │   │   │   │   ├── 📁 email/
-│   │   │   │   │   │   ├── 📄 email.module.ts
-│   │   │   │   │   │   ├── 📄 email.processor.ts
-│   │   │   │   │   │   └── 📄 email.producer.ts
-│   │   │   │   │   └── 📁 maps/
-│   │   │   │   │       ├── 📄 maps.module.ts
-│   │   │   │   │       ├── 📄 maps.processor.ts
-│   │   │   │   │       └── 📄 maps.producer.ts
-│   │   │   │   ├── 📁 Tokens/
-│   │   │   │   │   ├── 📄 token.module.ts
-│   │   │   │   │   └── 📄 token.service.ts
-│   │   │   │   ├── 📁 mailService/
-│   │   │   │   │   ├── 📄 mail.module.ts
-│   │   │   │   │   └── 📄 mail.service.ts
-│   │   │   │   ├── 📁 maps/
-│   │   │   │   │   ├── 📄 maps.module.ts
-│   │   │   │   │   └── 📄 maps.service.ts
-│   │   │   │   ├── 📁 redis/
-│   │   │   │   │   ├── 📄 index.ts
-│   │   │   │   │   ├── 📄 keys.ts
-│   │   │   │   │   └── 📄 redis.ts
-│   │   │   │   ├── 📄 index.ts
-│   │   │   │   ├── 📄 pdf-parser.ts
-│   │   │   │   └── 📄 s3.service.ts
-│   │   │   └── 📄 index.ts
-│   │   ├── 📁 decorator/
-│   │   │   ├── 📄 Auth.decorator.ts
-│   │   │   ├── 📄 custom.decorator.ts
-│   │   │   ├── 📄 index.ts
-│   │   │   └── 📄 param.decorator.ts
-│   │   ├── 📁 guards/
-│   │   │   ├── 📄 authentication.guard.ts
-│   │   │   ├── 📄 authorization.guard.ts
-│   │   │   └── 📄 index.ts
-│   │   ├── 📁 helpers/
-│   │   │   ├── 📄 date.helper.ts
-│   │   │   ├── 📄 index.ts
-│   │   │   └── 📄 notification.handler.ts
-│   │   ├── 📁 interceptors/
-│   │   │   ├── 📄 index.ts
-│   │   │   ├── 📄 response.interceptor.ts
-│   │   │   └── 📄 timeout.interceptor.ts
-│   │   ├── 📁 middlewares/
-│   │   │   ├── 📄 globalErrFilter.middleware.ts
-│   │   │   └── 📄 index.ts
-│   │   ├── 📄 common.module.ts
-│   │   └── 📄 index.ts
-│   ├── 📁 modules/
-│   │   ├── 📁 AI/
-│   │   │   ├── 📄 ai.module.ts
-│   │   │   ├── 📄 ai.prompt.ts
-│   │   │   └── 📄 ai.service.ts
-│   │   ├── 📁 Account/
-│   │   │   ├── 📁 Dto/
-│   │   │   │   ├── 📄 index.ts
-│   │   │   │   ├── 📄 resetPassword.dto.ts
-│   │   │   │   ├── 📄 updatePassword.dto.ts
-│   │   │   │   ├── 📄 updatePic.dto.ts
-│   │   │   │   └── 📄 upload.dto.ts
-│   │   │   ├── 📄 account.controller.ts
-│   │   │   ├── 📄 account.module.ts
-│   │   │   └── 📄 account.service.ts
-│   │   ├── 📁 Reports/
-│   │   │   ├── 📄 report.controller.ts
-│   │   │   ├── 📄 report.module.ts
-│   │   │   └── 📄 report.service.ts
-│   │   ├── 📁 application/
-│   │   │   ├── 📁 Dto/
-│   │   │   │   ├── 📄 applicationStatus.dto.ts
-│   │   │   │   ├── 📄 createApplication.dto.ts
-│   │   │   │   └── 📄 index.ts
-│   │   │   ├── 📄 application .module.ts
-│   │   │   ├── 📄 application.controller.ts
-│   │   │   └── 📄 application.service.ts
-│   │   ├── 📁 auth/
-│   │   │   ├── 📁 Dto/
-│   │   │   │   ├── 📄 ResendOtp.Dto.ts
-│   │   │   │   ├── 📄 confirmEmail.dto.ts
-│   │   │   │   ├── 📄 index.ts
-│   │   │   │   ├── 📄 login.dto.ts
-│   │   │   │   └── 📄 signup.dto.ts
-│   │   │   ├── 📄 auth.controller.ts
-│   │   │   ├── 📄 auth.module.ts
-│   │   │   └── 📄 auth.service.ts
-│   │   ├── 📁 company/
-│   │   │   ├── 📁 Dto/
-│   │   │   │   ├── 📄 changeAdminCompany.dto.ts
-│   │   │   │   ├── 📄 createCompany.dto.ts
-│   │   │   │   ├── 📄 index.ts
-│   │   │   │   ├── 📄 updateCompany.dto.ts
-│   │   │   │   └── 📄 upload.dto.ts
-│   │   │   ├── 📄 adminCompany.controller.ts
-│   │   │   ├── 📄 company.controller.ts
-│   │   │   ├── 📄 company.module.ts
-│   │   │   └── 📄 company.service.ts
-│   │   ├── 📁 dashboard/
-│   │   │   ├── 📁 Dto/
-│   │   │   │   ├── 📄 ChangeRole.dto.ts
-│   │   │   │   ├── 📄 createJobCat.dto.ts
-│   │   │   │   ├── 📄 createSkill.dto.ts
-│   │   │   │   ├── 📄 createWorkType.dto.ts
-│   │   │   │   ├── 📄 dataFilter.dto.ts
-│   │   │   │   ├── 📄 index.ts
-│   │   │   │   └── 📄 updateJobCat.dto.ts
-│   │   │   ├── 📄 dashboard.controller.spec.ts
-│   │   │   ├── 📄 dashboard.controller.ts
-│   │   │   ├── 📄 dashboard.module.ts
-│   │   │   ├── 📄 dashboard.service.spec.ts
-│   │   │   ├── 📄 dashboard.service.ts
-│   │   │   └── 📄 dashboardUser.service.ts
-│   │   ├── 📁 job/
-│   │   │   ├── 📁 dto/
-│   │   │   │   ├── 📄 changeStatus.dto.ts
-│   │   │   │   ├── 📄 create-job.dto.ts
-│   │   │   │   ├── 📄 index.ts
-│   │   │   │   ├── 📄 searchJob.dto.ts
-│   │   │   │   └── 📄 update-job.dto.ts
-│   │   │   ├── 📄 job.controller.spec.ts
-│   │   │   ├── 📄 job.controller.ts
-│   │   │   ├── 📄 job.module.ts
-│   │   │   ├── 📄 job.service.spec.ts
-│   │   │   └── 📄 job.service.ts
-│   │   ├── 📁 job-Category/
-│   │   │   ├── 📄 job-cat.controller.ts
-│   │   │   ├── 📄 job-cat.module.ts
-│   │   │   └── 📄 job-cat.service.ts
-│   │   ├── 📁 notification/
-│   │   │   ├── 📄 notification.controller.ts
-│   │   │   ├── 📄 notification.module.ts
-│   │   │   └── 📄 notification.service.ts
-│   │   ├── 📁 profile/
-│   │   │   ├── 📁 Dto/
-│   │   │   │   ├── 📄 addEducation.dto.ts
-│   │   │   │   ├── 📄 addExperience.dto.ts
-│   │   │   │   ├── 📄 addUserSkill.dto.ts
-│   │   │   │   ├── 📄 index.ts
-│   │   │   │   ├── 📄 updateEducation.dto.ts
-│   │   │   │   ├── 📄 updateExperience.dto.ts
-│   │   │   │   ├── 📄 updateProfile.dto.ts
-│   │   │   │   └── 📄 updateUserSkill.dto.ts
-│   │   │   ├── 📄 profile.controller.ts
-│   │   │   ├── 📄 profile.module.ts
-│   │   │   └── 📄 profile.service.ts
-│   │   ├── 📁 savedJobs/
-│   │   │   ├── 📄 savedJobs.controller.ts
-│   │   │   ├── 📄 savedJobs.module.ts
-│   │   │   └── 📄 savedJobs.service.ts
-│   │   ├── 📁 workType/
-│   │   │   ├── 📄 workType.controller.ts
-│   │   │   ├── 📄 workType.module.ts
-│   │   │   └── 📄 workType.service.ts
-│   │   └── 📄 index.ts
-│   ├── 📁 prisma/
-│   │   ├── 📄 prisma.module.ts
-│   │   └── 📄 prisma.service.ts
-│   ├── 📄 app.controller.spec.ts
-│   ├── 📄 app.controller.ts
-│   ├── 📄 app.module.ts
-│   ├── 📄 app.service.ts
-│   └── 📄 main.ts
-├── 📁 test/
-│   ├── 📄 app.e2e-spec.ts
-│   └── ⚙️ jest-e2e.json
-├── ⚙️ .drawio
-├── ⚙️ .gitignore
-├── ⚙️ .prettierrc
-├── 📝 README.md
-├── 🖼️ drawSQL-image-export-2026-03-18.jpg
-├── 📄 eslint.config.mjs
-├── 🖼️ jobSearch.png
-├── 📄 jobSearchSwagger.mhtml
-├── ⚙️ nest-cli.json
-├── ⚙️ package-lock.json
-├── ⚙️ package.json
-├── 📄 prisma.config.ts
-└── ⚙️ tsconfig.json
+---
 
-────────────────────────────────────────────────────────────────────────────────
-Generated by FileTree Pro Extension
+## 🧠 Key Features
+
+* 🔐 **Authentication & Authorization**
+
+  * Role-based system (User, Company Admin, Super Admin)
+  * Secure authentication with hashing and token-based access
+
+* 💼 **Job Management System**
+
+  * Create, update, and manage job postings
+  * Advanced filtering (title, description, work type, remote/on-site)
+
+* 🤖 **AI Integration**
+
+  * CV parsing using PDF extraction
+  * AI-powered analysis:
+
+    * ATS Score
+    * Strengths & Weaknesses
+    * Suggestions & Summary
+  * Skill matching between user and job requirements
+
+* ⚡ **Performance Optimization**
+
+  * Caching layer for high performance
+  * Background processing using BullMQ
+  * Optimized database queries with Prisma
+  & prisma Transaction
+
+* 💬 **Real-Time Features**
+
+  * Real-time chat system (private & group)
+  * Real-time notification system using MongoDB,mongoose
+
+* 📍 **Location Services**
+
+  * Company geolocation using static geocoding(formatted_address,lat,long)
+
+* 📊 **Admin Dashboard**
+
+  * Full control over users, job category, work type, skills
+
+---
+
+## 🏗️ Tech Stack
+
+* **Backend:** NestJS
+* **Database:** MySQL (Prisma ORM),mongodb (mongoose ODM)
+* **Real-time:** Socket.IO
+* **Queue:** BullMQ (Redis)
+* **AI:** OpenAI API | google Gemini
+* **Notifications:** MongoDB + Mongoose
+* **Storage:** AWS S3
+* **Containerization:** Docker (multi-stage + docker-compose)
+* **Logging:** Pino
+* **Documentation:** Swagger , Postman
+
+---
+
+## 🧩 Architecture Highlights
+
+* Modular architecture (Auth, Jobs, Company, AI, Dashboard, etc.)
+* Repository Pattern with Prisma& mongoose
+* Prisma Middleware for advanced query handling
+* Background jobs for heavy operations (AI, emails, async DB tasks)
+* Separation of concerns for scalability
+
+---
+
+## 🔍 Advanced Features
+
+* Skill system with relational mapping (UserSkill & JobSkill)
+* AI-based skill matching engine
+* Search system with multiple filters
+* Rate limiting & security best practices (Helmet, hashing, encryption)
+
+---
+
+## 🚀 Getting Started
+
+```bash
+# Install dependencies
+npm install
+
+# Run development server
+npm run start:dev
+
+# Run with Docker
+docker-compose -f docker-compose-dev.yml up --build
+```
+
+---
+
+## 📌 Future Improvements
+
+* Cursor-based pagination
+* Full-text search optimization
+* Enhanced monitoring & observability
+* use graphQl
+
+## Postman Docs
+https://documenter.getpostman.com/view/44460916/2sBXijLCgX
+---
+
+## Feel free to connect or reach out for collaboration or opportunities.
+
+job-search
+├── config/
+│   ├── dev.env
+│   └── swagger.ts
+│
+├── prisma/
+│   ├── migrations/
+│   └── schema.prisma
+│
+├── src/
+│   ├── common/
+│   │   ├── DB/                # Mongo models (chat, notification)
+│   │   ├── Enum/
+│   │   ├── Interfaces/
+│   │   ├── Repositories/
+│   │   │   ├── mongo/
+│   │   │   └── prisma/
+│   │   ├── Utils/
+│   │   │   ├── hashing/
+│   │   │   ├── crypto/
+│   │   │   ├── redis/
+│   │   │   ├── tokens/
+│   │   │   ├── mail/
+│   │   │   ├── s3/
+│   │   │   └── jobs/         # BullMQ (AI, email, db, maps)
+│   │   ├── decorators/
+│   │   ├── guards/
+│   │   ├── interceptors/
+│   │   ├── middlewares/
+│   │   └── helpers/
+│   │
+│   ├── modules/
+│   │   ├── auth/
+│   │   ├── account/
+│   │   ├── profile/
+│   │   ├── company/
+│   │   ├── job/
+│   │   ├── application/
+│   │   ├── savedJobs/
+│   │   ├── notification/
+│   │   ├── workType/
+│   │   ├── job-category/
+│   │   ├── dashboard/
+│   │   ├── reports/
+│   │   └── AI/
+│   │
+│   ├── prisma/
+│   │   ├── prisma.module.ts
+│   │   └── prisma.service.ts
+│   │
+│   └── main.ts
+│
+├── test/
+│
+├── README.md
+├── package.json
+└── tsconfig.json

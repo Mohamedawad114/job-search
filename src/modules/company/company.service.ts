@@ -95,15 +95,14 @@ export class CompanyService {
     if (emailDuplicated) throw new ConflictException('email is duplicated');
     const workType = await this.workTypeRepo.findById(Dto.workTypeId);
     if (!workType) throw new NotFoundException('workType not exist');
+    const { workTypeId, ...rest } = Dto;
     const data = {
-      ...Dto,
+      ...rest,
       admin: {
         connect: { id: user.id },
       },
       workType: {
-        connect: {
-          id: Dto.workTypeId,
-        },
+        connect: { id: workTypeId },
       },
     };
     const created = await this.companyRepo.create(data);
@@ -205,7 +204,10 @@ export class CompanyService {
       throw new NotFoundException(
         "no company found or you're not a company admin",
       );
-    const userExist = await this.userRepo.findById(data.userId);
+    const userExist = await this.userRepo.findOne({
+      id: data.userId,
+      isConfirmed: true,
+    });
     if (!userExist) throw new NotFoundException('user not found');
     await this.companyRepo.update(
       { adminId: user.id },
@@ -228,6 +230,7 @@ export class CompanyService {
   };
   search = async (search: string, page: number, limit: number) => {
     if (!search) throw new BadRequestException('search is required');
+    search = search.trim();
     const cached = await redis.get(redisKeys.allCompanies(page, limit, search));
     if (cached) {
       return { data: JSON.parse(cached) };
@@ -239,18 +242,22 @@ export class CompanyService {
           {
             name: {
               contains: search,
-              mode: 'insensitive',
             },
           },
           {
             description: {
               contains: search,
-              mode: 'insensitive',
             },
           },
         ],
       },
-      include: { workType: true },
+      select: {
+        workType: true,
+        name: true,
+        email: true,
+        logo: true,
+        description: true,
+      },
       skip: offset,
       take: limit,
     });
@@ -278,6 +285,14 @@ export class CompanyService {
     const companyJobs = await this.jobRepo.findAll({
       where: { companyId: companyId },
       orderBy: { createdAt: 'desc' },
+      select: {
+        id:true,
+        position: true,
+        description: true,
+        type: true,
+        location: true,
+        createdAt: true,
+      },
       skip: offset,
       take: limit,
     });

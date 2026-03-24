@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { JobService } from './job.service';
 import { JobController } from './job.controller';
 import {
@@ -16,6 +16,7 @@ import { rejectedApplicationsModule } from 'src/common/Utils/services';
     JobCategoryRepository,
     CompanyRepository,
   ],
-  imports: [rejectedApplicationsModule],
+  exports:[JobService],
+  imports: [forwardRef(()=> rejectedApplicationsModule)],
 })
 export class JobModule {}

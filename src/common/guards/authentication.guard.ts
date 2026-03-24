@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { redis, redisKeys, TokenServices } from '../Utils/services/index';
 import { UserRepository } from '../Repositories';
+import { Socket } from 'socket.io';
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
@@ -28,6 +29,21 @@ export class AuthGuard implements CanActivate {
         if (!user) throw new NotFoundException('user not found');
         request.user = user;
         return true;
+      case 'ws': {
+        const client: Socket = context.switchToWs().getClient();
+        const auth =
+          client.handshake.auth ?? client.handshake.headers['authorization'];
+        if (!auth) return false;
+        const token = auth.split(' ')[1];
+        if (!token) return false;
+        const tokenDecoded = this.tokenService.VerifyAccessToken(token);
+        const isBlacked = await redis.get(redisKeys.token_blackList(token));
+        if (isBlacked) return false;
+        const user = await this.userRepo.findById(tokenDecoded.id);
+        if (!user) throw new NotFoundException('user not found');
+        client.data.user = user;
+        return true;
+      }
     }
     return false;
   }

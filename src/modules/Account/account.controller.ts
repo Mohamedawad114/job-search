@@ -29,9 +29,9 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-@Auth(Sys_Role.admin, Sys_Role.admin, Sys_Role.company_admin)
+@Auth(Sys_Role.user, Sys_Role.admin, Sys_Role.company_admin)
 @ApiTags('account')
-@Controller('api/account')
+@Controller('account')
 export class AccountController {
   constructor(private readonly accountService: AccountServices) {}
 

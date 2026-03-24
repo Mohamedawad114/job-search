@@ -35,7 +35,7 @@ import {
 } from '@nestjs/swagger';
 @ApiTags('Dashboard')
 @Auth(Sys_Role.admin)
-@Controller('api/dashboard')
+@Controller('dashboard')
 export class DashboardController {
   constructor(
     private readonly dashboardService: DashboardService,
@@ -129,7 +129,7 @@ export class DashboardController {
   @ApiParam({ name: 'id', type: Number, description: 'User Id' })
   @Patch('ban-user/:id')
   @HttpCode(200)
-  BanUser(@Param('id') userId: number) {
+  BanUser(@Param('id',ParseIntPipe) userId: number) {
     return this.userDashboard.BanUser(userId);
   }
 
@@ -137,7 +137,7 @@ export class DashboardController {
   @ApiParam({ name: 'id', type: Number, description: 'User Id' })
   @Patch('unban-user/:id')
   @HttpCode(200)
-  unBanUser(@Param('id') userId: number) {
+  unBanUser(@Param('id',ParseIntPipe) userId: number) {
     return this.userDashboard.unBanUser(userId);
   }
   @Patch('change-role/:id')

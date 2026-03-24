@@ -8,6 +8,7 @@ import {
 } from 'class-validator';
 import { jobType, Location } from 'src/common/Enum';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 
 export class SearchDto {
   @ApiPropertyOptional({ enum: Location })
@@ -21,12 +22,17 @@ export class SearchDto {
   type?: jobType;
 
   @ApiPropertyOptional({ type: [Number] })
+  @IsOptional()
   @IsArray()
+  @Transform(({ value }) => {
+    if (Array.isArray(value)) {
+      return value.map((item) => Number(item));
+    }
+    return [Number(value)];
+  })
   @IsNumber({}, { each: true })
   @IsPositive({ each: true })
-  @IsOptional()
   skills?: number[];
-
   @ApiPropertyOptional()
   @IsString()
   @IsOptional()

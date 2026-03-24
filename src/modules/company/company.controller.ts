@@ -8,8 +8,8 @@ import {
   Query,
 } from '@nestjs/common';
 import { type IUser } from 'src/common';
-import { Sys_Role}from 'src/common/Enum'
-import { Auth, AuthUser }from 'src/common/decorator'
+import { Sys_Role } from 'src/common/Enum';
+import { Auth, AuthUser } from 'src/common/decorator';
 import { CompanyService } from './company.service';
 import {
   ApiNotFoundResponse,
@@ -20,11 +20,11 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 @ApiTags('company')
-@Auth(Sys_Role.company_admin, Sys_Role.user)
-@Controller('api/company')
+@Auth(Sys_Role.company_admin, Sys_Role.user, Sys_Role.admin)
+@Controller('company')
 export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
-  @Get('/company/:id/jobs')
+  @Get('/:id/jobs')
   @ApiOperation({ summary: 'Get company jobs' })
   @ApiParam({ name: 'id', type: Number, description: 'Company Id' })
   @ApiQuery({ name: 'page', type: Number, description: 'Page number' })
@@ -39,7 +39,7 @@ export class CompanyController {
   })
   @ApiNotFoundResponse({ description: 'company not found' })
   companyJobs(
-    @Param('id') companyId: number,
+    @Param('id', ParseIntPipe) companyId: number,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
   ) {
@@ -64,18 +64,7 @@ export class CompanyController {
   ) {
     return this.companyService.search(search, page, limit);
   }
-  @Get('company/:id')
-  @HttpCode(200)
-  @ApiOperation({ summary: 'Get company profile' })
-  @ApiResponse({
-    status: 200,
-    description: 'Company profile retrieved successfully',
-  })
-  @ApiNotFoundResponse({ description: 'company not found' })
-  companyProfile(@Param('id') companyId: number, @AuthUser() user: IUser) {
-    return this.companyService.getCompanyProfile(user, companyId);
-  }
-  @Get('/companies')
+  @Get('/all')
   @HttpCode(200)
   @ApiOperation({ summary: 'get all companies ' })
   @ApiQuery({ name: 'page', type: Number, description: 'Page number' })
@@ -90,5 +79,19 @@ export class CompanyController {
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
   ) {
     return this.companyService.getAllCompanies(page, limit);
+  }
+  @Get('/:id')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Get company profile' })
+  @ApiResponse({
+    status: 200,
+    description: 'Company profile retrieved successfully',
+  })
+  @ApiNotFoundResponse({ description: 'company not found' })
+  companyProfile(
+    @Param('id', ParseIntPipe) companyId: number,
+    @AuthUser() user: IUser,
+  ) {
+    return this.companyService.getCompanyProfile(user, companyId);
   }
 }
