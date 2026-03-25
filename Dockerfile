@@ -31,7 +31,16 @@ ENV NODE_ENV=production \
     PORT=3000
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 RUN npm ci --omit=dev
-COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/dist                          ./dist
+COPY --from=builder /app/node_modules/.prisma          ./node_modules/.prisma
+COPY --from=builder /app/node_modules/@prisma          ./node_modules/@prisma
+COPY prisma                                            ./prisma
+
+
+COPY docker-entrypoint.sh ./docker-entrypoint.sh
+RUN chmod +x ./docker-entrypoint.sh && \
+    chown -R appuser:appgroup /app
+
 USER appuser
 
 EXPOSE 3000
@@ -39,6 +48,4 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
     CMD wget -qO- http://localhost:3000/health || exit 1
 
-ENTRYPOINT ["/sbin/tini", "--"]
-
-CMD ["node", "dist/main"]
+ENTRYPOINT ["/sbin/tini", "--", "./docker-entrypoint.sh"]

@@ -32,7 +32,7 @@ export class AuthGuard implements CanActivate {
       case 'ws': {
         const client: Socket = context.switchToWs().getClient();
         const auth =
-          client.handshake.auth ?? client.handshake.headers['authorization'];
+          client.handshake.auth?.authorization ?? client.handshake.headers['authorization'];
         if (!auth) return false;
         const token = auth.split(' ')[1];
         if (!token) return false;

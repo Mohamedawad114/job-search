@@ -95,8 +95,9 @@ export class ChatService {
     };
   };
   async getOrCreatePrivateConversation(userId: number, targetUserId: number) {
+    console.log(userId, targetUserId);
     let conversation = await this.conversionRepo.findOneDocument({
-      members: { $all: [userId, targetUserId] },
+      memberIds: { $all: [userId, targetUserId] },
       type: conversionType.private,
     });
 

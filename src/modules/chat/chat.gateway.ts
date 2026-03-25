@@ -16,10 +16,10 @@ import { Types } from 'mongoose';
 import { Auth, Sys_Role, UserRepository } from 'src/common';
 import { PinoLogger } from 'nestjs-pino';
 import { redis, redisKeys, TokenServices } from 'src/common/Utils/services';
-import { ParseIntPipe } from '@nestjs/common';
-
+import { Injectable, ParseIntPipe } from '@nestjs/common';
+@Injectable()
 @Auth(Sys_Role.user, Sys_Role.company_admin)
-@WebSocketGateway({ cors: true, namespace: '/chat' })
+@WebSocketGateway({ cors: { origin: '*' }, namespace: '/chat' })
 export class ChatGateway
   implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
 {
@@ -39,7 +39,6 @@ export class ChatGateway
       let auth =
         client.handshake.auth?.authorization ||
         client.handshake.headers?.authorization;
-
       if (!auth) {
         this.logger.warn('Missing accessToken');
         client.disconnect();
@@ -55,7 +54,7 @@ export class ChatGateway
         throw new WsException('forbidden: user not found');
       }
       client.data.user = user;
-      await redis.sadd(redisKeys.socketKey(user._id.toString()), client.id);
+      await redis.sadd(redisKeys.socketKey(user.id), client.id);
       this.logger.info(`Client connected: ${client.id}`);
     } catch (error) {
       this.logger.error(`Connection error: ${error.message}`);
@@ -66,7 +65,7 @@ export class ChatGateway
     try {
       const user = client.data.user;
       if (!user) return;
-      await redis.srem(redisKeys.socketKey(user._id.toString()), client.id);
+      await redis.srem(redisKeys.socketKey(user.id), client.id);
       this.logger.info(`Client disconnected: ${client.id}`);
     } catch (error) {
       this.logger.error(`Disconnect error: ${error.message}`);
@@ -89,7 +88,7 @@ export class ChatGateway
       const user = socket.data.user;
       const conversation =
         await this.chatService.getOrCreatePrivateConversation(
-          user,
+          user.id,
           data.targetId,
         );
       const roomId = conversation._id.toString();
@@ -101,7 +100,7 @@ export class ChatGateway
       );
       this.server.to(roomId).emit('message-send', message);
     } catch (error) {
-      this.logger.error(`send-private-message error: ${error.message}`);
+      this.logger.error(`send-private-message error: ${error.message},`);
       socket.emit('error', {
         event: 'send-private-message',
         message: error.message,
