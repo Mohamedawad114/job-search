@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import helmet from 'helmet';
 import hpp from 'hpp';
+import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { ValidationPipe } from '@nestjs/common';
 import { PinoLogger } from 'nestjs-pino';
@@ -16,7 +17,7 @@ async function bootstrap() {
   });
 
 
-  app.use(helmet(), hpp(), cookieParser());
+  app.use(helmet(), hpp(), cookieParser(),cors());
   app.useGlobalPipes(
     new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true,transform:true }),
   );

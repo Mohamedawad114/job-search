@@ -11,9 +11,15 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
-import { MessageDto, MessageGroupDto } from './Dto';
+import {
+  GetGroupHistoryDto,
+  GetHistoryDto,
+  MessageDto,
+  MessageGroupDto,
+  ReadMessageDto,
+} from './Dto';
 import { Types } from 'mongoose';
-import { Auth, Sys_Role, UserRepository } from 'src/common';
+import { Auth, IConversion, Sys_Role, UserRepository } from 'src/common';
 import { PinoLogger } from 'nestjs-pino';
 import { redis, redisKeys, TokenServices } from 'src/common/Utils/services';
 import { Injectable, ParseIntPipe } from '@nestjs/common';
@@ -55,7 +61,15 @@ export class ChatGateway
       }
       client.data.user = user;
       await redis.sadd(redisKeys.socketKey(user.id), client.id);
+      await redis.sadd(redisKeys.onlineUsers(), user.id);
+      this.server.emit('user-online', { userId: user.id, name: user.name });
       this.logger.info(`Client connected: ${client.id}`);
+      const conversations = await this.chatService.getUserConversations(
+        user.id,
+      );
+      conversations.forEach((conv: IConversion) => {
+        client.join((conv._id as unknown as string).toString());
+      });
     } catch (error) {
       this.logger.error(`Connection error: ${error.message}`);
       client.disconnect();
@@ -66,6 +80,13 @@ export class ChatGateway
       const user = client.data.user;
       if (!user) return;
       await redis.srem(redisKeys.socketKey(user.id), client.id);
+      const remainingSockets = await redis.smembers(
+        redisKeys.socketKey(user.id),
+      );
+      if (remainingSockets.length === 0) {
+        await redis.srem(redisKeys.onlineUsers(), user.id);
+        this.server.emit('user-offline', { userId: user.id, name: user.name });
+      }
       this.logger.info(`Client disconnected: ${client.id}`);
     } catch (error) {
       this.logger.error(`Disconnect error: ${error.message}`);
@@ -110,19 +131,27 @@ export class ChatGateway
   @SubscribeMessage('get-history')
   async handleGetHistory(
     @ConnectedSocket() socket: Socket,
-    @MessageBody('targetUserId', ParseIntPipe) targetUserId: number,
+    @MessageBody() data: GetHistoryDto,
   ) {
     try {
       const userId = this.getUserId(socket);
       const conversation =
         await this.chatService.getOrCreatePrivateConversation(
           userId,
-          targetUserId,
+          data.targetUserId,
         );
       const roomId = conversation._id.toString();
-      const messages = await this.chatService.getConversationMessages(roomId);
+      const { messages, meta } = await this.chatService.getConversationMessages(
+        roomId,
+        data.cursor,
+        data.limit,
+      );
       this.joinRoom(socket, roomId);
-      socket.emit('chat-history', { chat: messages, targetUserId });
+      socket.emit('chat-history', {
+        chat: messages,
+        data: { targetUserId: data.targetUserId },
+        meta: meta,
+      });
     } catch (error) {
       this.logger.error(`get-history error: ${error.message}`);
       socket.emit('error', { event: 'get-history', message: error.message });
@@ -165,29 +194,63 @@ export class ChatGateway
   @SubscribeMessage('get-group-history')
   async handleGroupHistory(
     @ConnectedSocket() socket: Socket,
-    @MessageBody('targetGroupId') targetGroupId: string,
+    @MessageBody() data: GetGroupHistoryDto,
   ) {
     try {
       const userId = this.getUserId(socket);
       const isMember = await this.chatService.isUserInGroup(
         userId,
-        new Types.ObjectId(targetGroupId),
+        new Types.ObjectId(data.targetGroupId),
       );
       if (!isMember) {
         throw new WsException('غير مصرح: لست عضوًا في هذه المجموعة');
       }
-      const conversation =
-        await this.chatService.getGroupConversation(targetGroupId);
+      const conversation = await this.chatService.getGroupConversation(
+        data.targetGroupId,
+      );
       const roomId = conversation._id.toString();
-      const messages = await this.chatService.getConversationMessages(roomId);
+      const messages = await this.chatService.getConversationMessages(
+        roomId,
+        data.cursor,
+        data.limit,
+      );
       this.joinRoom(socket, roomId);
-      socket.emit('group-chat-history', { chat: messages, targetGroupId });
+      socket.emit('group-chat-history', {
+        chat: messages,
+        data: { targetGroupId: data.targetGroupId },
+      });
     } catch (error) {
       this.logger.error(`get-group-history error: ${error.message}`);
       socket.emit('error', {
         event: 'get-group-history',
         message: error.message,
       });
+    }
+  }
+  @SubscribeMessage('mark-as-read')
+  async handleMarkAsRead(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() data: ReadMessageDto,
+  ) {
+    const userId = this.getUserId(socket);
+    const conversation = await this.chatService.getOrCreatePrivateConversation(
+      userId,
+      data.targetId,
+    );
+    const result = await this.chatService.markMessagesAsRead(
+      conversation._id,
+      userId,
+    );
+    if (result.modifiedCount > 0) {
+      const senderSockets = await redis.smembers(
+        redisKeys.socketKey(data.targetId),
+      );
+      for (const socketId of senderSockets) {
+        this.server.to(socketId).emit('messages-read', {
+          conversationId: conversation._id,
+          readBy: userId,
+        });
+      }
     }
   }
 }

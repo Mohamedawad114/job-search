@@ -2,6 +2,7 @@ import {
   IsMongoId,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsPositive,
   IsString,
   Length,
@@ -25,4 +26,30 @@ export class MessageGroupDto {
   content: string;
   @IsMongoId()
   targetId: Types.ObjectId;
+}
+export class ReadMessageDto {
+  @IsNumber()
+  @IsNotEmpty()
+  @IsPositive()
+  targetId: number;
+}
+export class GetHistoryDto {
+  @IsNumber()
+  @IsNotEmpty()
+  @IsPositive()
+  targetUserId: number;
+  @IsNumber()
+  @IsOptional()
+  limit?: number;
+  @IsString()
+  cursor: string;
+}
+export class GetGroupHistoryDto {
+@IsMongoId()
+  targetGroupId: Types.ObjectId;
+  @IsNumber()
+  @IsOptional()
+  limit?: number;
+  @IsString()
+  cursor: string;
 }

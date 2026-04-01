@@ -7,8 +7,9 @@ export interface IMessage {
   content: string;
 }
 export interface IConversion {
+  _id?: Types.ObjectId | string;
   type: conversionType;
-  adminId?:number
+  adminId?: number;
   name?: string;
   memberIds: number[];
 }

@@ -25,4 +25,5 @@ export const redisKeys = {
   notification: (userId: number, page: number | '*', limit: number | '*') =>
     `notifications:userId:${userId}:page${page}:limit:${limit}`,
   socketKey: (userId: number) => `user_sockets:${userId}`,
+  onlineUsers: () => `online:users`,
 };

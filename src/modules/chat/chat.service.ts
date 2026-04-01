@@ -7,6 +7,8 @@ import { Types } from 'mongoose';
 import {
   ConversionRepository,
   conversionType,
+  decoderCursor,
+  encoderCursor,
   IUser,
   MessageRepository,
   UserRepository,
@@ -20,6 +22,27 @@ export class ChatService {
     private readonly messageRepo: MessageRepository,
     private readonly userRepo: UserRepository,
   ) {}
+  async getUserConversations(userId: number) {
+    const conversations = await this.conversionRepo.findDocuments(
+      {
+        memberIds: userId,
+      },
+      {
+        _id: 1,
+      },
+    );
+    return conversations;
+  }
+  async markMessagesAsRead(conversionId: Types.ObjectId, userId: number) {
+    return await this.messageRepo.updateManyDocuments(
+      {
+        conversionId,
+        senderId: { $ne: userId },
+        isRead: false,
+      },
+      { isRead: true },
+    );
+  }
   async CreateGroupConversation(user: IUser, data: CreateGroup) {
     const conversation = await this.conversionRepo.findOneDocument({
       name: data.name,
@@ -83,30 +106,49 @@ export class ChatService {
       data: groupInfo,
     };
   };
-  listUserChats = async (user: IUser) => {
+  listUserChats = async (user: IUser, limit: number, cursor: string) => {
+    const decodedCursor = decoderCursor(cursor);
+    const filter: any = {
+      memberIds: user.id,
+    };
+    if (decodedCursor) {
+      filter.$or = [
+        { createdAt: { $lt: decodedCursor.createdAt } },
+        {
+          createdAt: decodedCursor.createdAt,
+          _id: { $lt: decodedCursor._id },
+        },
+      ];
+    }
     const chats = await this.conversionRepo.findDocuments(
-      { memberIds: user.id },
-      { name: 1, createdAt: -1 },
+      filter,
+      { name: 1, createdAt: 1 },
+      {
+        limit: limit,
+        sort: { createdAt: -1, id: -1 },
+      },
     );
+    const lastItem = chats[chats.length - 1];
+    const nextCursor = encoderCursor(lastItem.id, lastItem.createdAt);
     if (!chats.length) return [];
     return {
       message: 'chats',
       data: chats,
+      meta: { nextCursor: nextCursor },
     };
   };
   async getOrCreatePrivateConversation(userId: number, targetUserId: number) {
-    console.log(userId, targetUserId);
     let conversation = await this.conversionRepo.findOneDocument({
       memberIds: { $all: [userId, targetUserId] },
       type: conversionType.private,
     });
-
     if (!conversation) {
       conversation = await this.conversionRepo.create({
         type: conversionType.private,
         memberIds: [userId, targetUserId],
       });
     }
+
     return conversation;
   }
 
@@ -142,10 +184,40 @@ export class ChatService {
     });
   }
 
-  async getConversationMessages(conversionId: string) {
-    return await this.messageRepo.findDocuments({
-      where: { conversionId },
-      sort: { createdAt: 1 },
-    });
+  async getConversationMessages(
+    conversionId: string,
+    cursor: string,
+    limit?: number,
+  ) {
+    const decodedCursor = decoderCursor(cursor);
+    const filter: any = {
+      conversionId: new Types.ObjectId(conversionId),
+    };
+    if (decodedCursor) {
+      filter.$or = [
+        { createdAt: { $lt: decodedCursor.createdAt } },
+        {
+          createdAt: decodedCursor.createdAt,
+          _id: { $lt: decodedCursor._id },
+        },
+      ];
+    }
+    const chatMessages = await this.messageRepo.findDocuments(
+      filter,
+      {},
+      {
+        limit: limit,
+        sort: { createdAt: -1, _id: -1 },
+      },
+    );
+      if (!chatMessages.length) {
+        return { messages: [], meta: { nextCursor: null } };
+      }
+    const lastItem = chatMessages[chatMessages.length - 1];
+    const nextCursor = encoderCursor(
+      lastItem._id.toString(),
+      lastItem.createdAt,
+    );
+    return { messages: chatMessages, meta: { nextCursor: nextCursor } };
   }
 }

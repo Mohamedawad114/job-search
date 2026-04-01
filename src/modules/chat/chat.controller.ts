@@ -8,6 +8,8 @@ import {
   Patch,
   HttpStatus,
   ParseIntPipe,
+  Query,
+  DefaultValuePipe,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -114,7 +116,11 @@ export class ConversationController {
     status: HttpStatus.OK,
     description: 'Returns an array of chats.',
   })
-  async listUserChats(@AuthUser() user: IUser) {
-    return await this.conversationService.listUserChats(user);
+  async listUserChats(
+    @AuthUser() user: IUser,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @Query('cursor') cursor: string,
+  ) {
+    return await this.conversationService.listUserChats(user, limit, cursor);
   }
 }
