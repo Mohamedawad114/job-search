@@ -6,17 +6,27 @@ import {
 
 import {
   CompanyRepository,
+  decoderCursor,
+  encoderCursor,
   IUser,
   JobCategoryRepository,
   JobRepository,
   JobStatus,
 } from 'src/common';
-import { ChangeStatus, CreateJobDto, SearchDto, UpdateJobDto } from './dto';
+import {
+  ChangeStatus,
+  CreateJobDto,
+  CreateJobGqlDto,
+  SearchDto,
+  UpdateJobDto,
+} from './dto';
 import {
   redis,
   redisKeys,
   rejectedApplicationsProducer,
 } from 'src/common/Utils/services';
+import { plainToInstance } from 'class-transformer';
+import { JobEntity } from './entities/searchJob.entity';
 
 @Injectable()
 export class JobService {
@@ -31,7 +41,6 @@ export class JobService {
       redisKeys.companyJobs(companyId, '*', '*'),
       redisKeys.allJobs('*', '*'),
     ];
-
     for (const pattern of deletePatterns) {
       const stream = redis.scanStream({ match: pattern, count: 100 });
       stream.on('data', (keys) => {
@@ -42,7 +51,7 @@ export class JobService {
       });
     }
   }
-  createJob = async (user: IUser, data: CreateJobDto) => {
+  createJob = async (user: IUser, data: CreateJobDto | CreateJobGqlDto) => {
     const company = await this.companyRepo.findOne(
       { adminId: user.id },
       {
@@ -84,14 +93,14 @@ export class JobService {
       });
       const jobWithSkills = await tx.job.findUnique({
         where: { id: job.id },
-        include: { skills: true },
+        include: { skills: true, company: true },
       });
-      return jobWithSkills;
+      return jobWithSkills as JobEntity;
     });
     if (!jobCreated) throw new BadRequestException('some thing wrong');
     await this.invalidateJobCache(company.id);
     await this.dbQueue.JobPosted(company.name, jobCreated?.position);
-    return { message: 'job posted ', data: jobCreated };
+    return jobCreated as JobEntity;
   };
   updateJob = async (user: IUser, jobId: number, Dto: UpdateJobDto) => {
     const company = await this.companyRepo.findOne({ adminId: user.id });
@@ -180,12 +189,13 @@ export class JobService {
   };
   getJobDetails = async (jobId: number) => {
     const cached = await redis.get(redisKeys.jobDetails(jobId));
-    if (cached) return { message: 'job Details', data: JSON.parse(cached) };
+    if (cached) return JSON.parse(cached);
     const job = await this.jobRepo.findOne(
       { id: jobId, status: JobStatus.open },
       {
         include: {
           skills: true,
+          company: true,
         },
       },
     );
@@ -196,20 +206,16 @@ export class JobService {
       'EX',
       60 * 60 * 12,
     );
-    return { message: 'job Details', data: job };
+    return job;
   };
-  searchJobs = async (filter: SearchDto, page: number, limit: number) => {
+  searchJobs = async (filter: SearchDto, limit: number, cursor?: string) => {
+    const decodedCursor = decoderCursor(cursor);
     const cached = await redis.get(
-      redisKeys.allJobs(page, limit, JSON.stringify(filter)),
+      redisKeys.allJobs(limit, cursor, JSON.stringify(filter)),
     );
     if (cached) {
-      const { jobs, total } = JSON.parse(cached);
-      return {
-        data: jobs,
-        meta: { total, pages: Math.ceil(total / limit) },
-      };
+      return JSON.parse(cached);
     }
-    const offset = (page - 1) * limit;
     const where: any = {
       status: JobStatus.open,
       ...(filter.location && { location: filter.location }),
@@ -224,74 +230,75 @@ export class JobService {
         skills: { some: { skillId: { in: filter.skills } } },
       }),
     };
-    const [jobs,total] = await Promise.all([
-      this.jobRepo.findAll({
-        where: where,
-        select: { position: true, description: true, id: true,companyId:true },
-        skip: offset,
-        take: limit,
-      }),
-      this.jobRepo.count({ where: where }),
-    ]);
-
+    const jobs = await this.jobRepo.findAll({
+      where: where,
+      include: { skills: true, company: true },
+      skip: decodedCursor ? 1 : 0,
+      cursor: decodedCursor ? { id: decodedCursor.id } : undefined,
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+      take: limit,
+    });
     if (!jobs.length) return { message: 'no jobs found ' };
-    await redis.set(
-      redisKeys.allJobs(page, limit, JSON.stringify(filter)),
-      JSON.stringify({ jobs, total }),
-      'EX',
-      60 * 60 * 12,
+    const lastItem = jobs[jobs.length - 1];
+    const nextCursor = encoderCursor(
+      lastItem.id.toString(),
+      lastItem.createdAt,
     );
-    return {
-      message: 'jobs found',
+    const response = {
       data: jobs,
-   meta: { total, pages: Math.ceil(total / limit) },
+      meta: { nextCursor },
     };
-  };
-  AllJobs = async (page: number, limit: number) => {
-    const cached = await redis.get(redisKeys.allJobs(page, limit));
-    if (cached) {
-      const { jobs, total } = JSON.parse(cached);
-      return {
-        data: jobs,
-        meta: { total, pages: Math.ceil(total / limit) },
-      };
-    }
-    const offset = (page - 1) * limit;
-    const [jobs, total] = await Promise.all([
-      this.jobRepo.findAll({
-        where: { status: JobStatus.open },
-        select: {
-          id: true,
-          position: true,
-          description: true,
-          type: true,
-          location: true,
-          companyId: true,
-          categoryId: true,
-          applicationCount: true,
-          status: true,
-          createdAt: true,
-          updatedAt: true,
-        },
-        orderBy: { createdAt: 'desc' },
-        skip: offset,
-        take: limit,
-      }),
-      this.jobRepo.count({
-        where: { status: JobStatus.open },
-      }),
-    ]);
-    if (!jobs.length) return { message: 'no jobs found ' };
     await redis.set(
-      redisKeys.allJobs(page, limit),
-      JSON.stringify({ jobs, total }),
+      redisKeys.allJobs(limit, nextCursor, JSON.stringify(filter)),
+      JSON.stringify({ response }),
+      'EX',
+      60 * 60 * 12,
+    );
+    return response;
+  };
+  AllJobs = async (limit: number, cursor?: string) => {
+    const decodedCursor = decoderCursor(cursor);
+    const cached = await redis.get(redisKeys.allJobs(limit, cursor));
+    if (cached) {
+      const { jobs } = JSON.parse(cached);
+      return jobs;
+    }
+    const jobs = await this.jobRepo.findAll({
+      where: { status: JobStatus.open },
+      select: {
+        id: true,
+        position: true,
+        description: true,
+        type: true,
+        location: true,
+        companyId: true,
+        categoryId: true,
+        applicationCount: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      cursor: decodedCursor ? { id: decodedCursor.id } : undefined,
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+      take: limit,
+      skip: decodedCursor ? 1 : 0,
+    });
+    if (!jobs.length) return { message: 'no jobs found ' };
+    const lastItem = jobs[jobs.length - 1];
+    const nextCursor = encoderCursor(
+      lastItem.id.toString(),
+      lastItem.createdAt,
+    );
+    await redis.set(
+      redisKeys.allJobs(limit, nextCursor),
+      JSON.stringify({ jobs }),
       'EX',
       60 * 60 * 12,
     );
     return {
       message: 'jobs found',
       data: jobs,
-      meta: { total, pages: Math.ceil(total / limit) },
+      meta: { nextCursor },
     };
   };
 }

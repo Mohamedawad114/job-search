@@ -4,9 +4,12 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import {  GqlContextType, GqlExecutionContext } from '@nestjs/graphql';
 import { redis, redisKeys, TokenServices } from '../Utils/services/index';
 import { UserRepository } from '../Repositories';
 import { Socket } from 'socket.io';
+import { IUser } from '../Interfaces';
+
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
@@ -14,9 +17,9 @@ export class AuthGuard implements CanActivate {
     private readonly userRepo: UserRepository,
   ) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const type = context.getType();
+    const type = context.getType<GqlContextType>();
     switch (type) {
-      case 'http':
+      case 'http': {
         const request = context.switchToHttp().getRequest();
         const authHeader = request.headers['authorization'];
         if (!authHeader) return false;
@@ -29,10 +32,12 @@ export class AuthGuard implements CanActivate {
         if (!user) throw new NotFoundException('user not found');
         request.user = user;
         return true;
+      }
       case 'ws': {
         const client: Socket = context.switchToWs().getClient();
         const auth =
-          client.handshake.auth?.authorization ?? client.handshake.headers['authorization'];
+          client.handshake.auth?.authorization ??
+          client.handshake.headers['authorization'];
         if (!auth) return false;
         const token = auth.split(' ')[1];
         if (!token) return false;
@@ -42,6 +47,23 @@ export class AuthGuard implements CanActivate {
         const user = await this.userRepo.findById(tokenDecoded.id);
         if (!user) throw new NotFoundException('user not found');
         client.data.user = user;
+        return true;
+      }
+      case 'graphql': {
+        const gqlContext = GqlExecutionContext.create(context);
+        const { req } = gqlContext.getContext<{
+          req: Request & { user: IUser };
+        }>();
+        const authHeader = (req.headers)['authorization'];
+        if (!authHeader) return false;
+        const token = authHeader.split(' ')[1];
+        if (!token) return false;
+        const decoded = this.tokenService.VerifyAccessToken(token);
+        const isBlacklisted = await redis.get(redisKeys.token_blackList(token));
+        if (isBlacklisted) return false;
+        const user = await this.userRepo.findById(decoded.id);
+        if (!user) throw new NotFoundException('user not found');
+        req.user = user;
         return true;
       }
     }

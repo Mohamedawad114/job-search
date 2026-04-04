@@ -1,0 +1,160 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""Company details"""
+type Company {
+  name: String!
+  logo: String
+  description: String
+  email: String!
+  website: String
+  adminId: Int!
+  address: String
+  formatAddress: String
+  latitude: Float
+  longitude: Float
+  workTypeId: Int!
+}
+
+"""Job Skills"""
+type Skills {
+  skillId: Int!
+  id: Int
+  level: SkillsLevel!
+  jobId: Int!
+}
+
+enum SkillsLevel {
+  beginner
+  intermediate
+  advanced
+}
+
+"""Search result for jobs"""
+type JobEntity {
+  id: Int!
+  position: String!
+  description: String
+  type: JobType!
+  location: JobLocation!
+  companyId: Int!
+  categoryId: Int!
+  maxNumApplication: Int!
+  applicationCount: Int
+  status: JobStatus!
+  company: Company!
+  skills: [Skills!]!
+}
+
+enum JobType {
+  part_time
+  full_time
+}
+
+enum JobLocation {
+  remote
+  onsite
+  hybrid
+}
+
+enum JobStatus {
+  open
+  closed
+}
+
+type JobMeta {
+  nextCursor: String
+}
+
+type JobResponse {
+  data: [JobEntity!]!
+  meta: JobMeta!
+}
+
+type UserEntity {
+  id: Int!
+  name: String!
+  email: String!
+  phoneNumber: String!
+  profilePicture: String
+  gender: Gender!
+  maritalStatus: maritalStatus!
+  MilitarySituation: MilitarySituation
+  companyId: Int
+  CV: String
+  bio: String
+}
+
+enum Gender {
+  male
+  female
+}
+
+enum maritalStatus {
+  single
+  married
+  divorced
+  widower
+}
+
+enum MilitarySituation {
+  exempt
+  completed
+  postponed
+}
+
+type ApplicationEntity {
+  id: Int!
+  city: String!
+  phone: String!
+  expectedSalary: Float!
+  userId: Int!
+  jobId: Int!
+  CV: String!
+  status: ApplicationStatus!
+  noticePeriod: Int!
+  user: UserEntity!
+}
+
+enum ApplicationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  REVIEWED
+}
+
+type PaginationMeta {
+  total: Int!
+  pages: Int!
+}
+
+type JobApplicationsResponse {
+  data: [ApplicationEntity!]!
+  meta: PaginationMeta!
+}
+
+type Query {
+  searchJobs(location: JobLocation, type: JobType, skills: [Float!], search: String, cursor: String, limit: Float! = 10): JobResponse!
+  jobDetails(jobId: Int!): JobEntity!
+  all_job_applications(jobId: Int!, page: Int! = 1, limit: Int! = 10): JobApplicationsResponse!
+}
+
+type Mutation {
+  createJob(input: CreateJobGqlDto!): JobEntity!
+}
+
+input CreateJobGqlDto {
+  position: String!
+  description: String
+  type: JobType!
+  location: JobLocation!
+  categoryId: Int!
+  skills: [AddSkillGqlDto!]!
+  maxNumApplication: Int!
+}
+
+input AddSkillGqlDto {
+  skillId: Int!
+  level: SkillsLevel!
+}

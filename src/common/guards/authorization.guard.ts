@@ -1,13 +1,14 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { Reflector } from '@nestjs/core';
+import { GqlExecutionContext } from '@nestjs/graphql';
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const type = context.getType();
+    const type = context.getType<string>();
     let user: any;
     if (type === 'http') {
       const request = context.switchToHttp().getRequest();
@@ -16,15 +17,15 @@ export class RolesGuard implements CanActivate {
       const client = context.switchToWs().getClient();
       user = client.data.user;
     }
-    const methodRoles = this.reflector.get<string[]>(
-      'roles',
-      context.getHandler(),
-    );
-    const classRoles = this.reflector.get<string[]>(
-      'roles',
-      context.getClass(),
-    );
-    const allowedRoles = methodRoles || classRoles;
+   else if (type === 'graphql') {
+      const ctx = GqlExecutionContext.create(context);
+      const { req } = ctx.getContext()
+      user=req.user;
+    }
+const allowedRoles = this.reflector.getAllAndOverride<string[]>('roles', [
+  context.getHandler(),
+  context.getClass(),
+]);
     const userRoles = user.role;
     if (allowedRoles && allowedRoles.includes(userRoles)) return true;
     return false;

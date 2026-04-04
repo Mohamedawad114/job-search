@@ -85,12 +85,13 @@ export class ApplicationController {
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
   ) {
-    return await this.applicationService.allJobApplications(
+    const res = await this.applicationService.allJobApplications(
       user,
       jobId,
       page,
       limit,
     );
+    return { message: 'all job applications ', data: res.data, meta: res.meta };
   }
   @Auth(Sys_Role.user, Sys_Role.company_admin)
   @Get(':id')

@@ -173,15 +173,11 @@ export class ApplicationService {
     const cached = await redis.get(
       redisKeys.JobApplication(jobId, page, limit),
     );
-    if (cached) {
       if (cached) {
         const { applications, total } = JSON.parse(cached);
-        return {
-          data: applications,
-          meta: { total, pages: Math.ceil(total / limit) },
-        };
+        const res={data:applications,meta:{total,pages:Math.ceil(total/limit)}}
+        return res
       }
-    }
     const job = await this.jobRepo.findOne({
       id: jobId,
       companyId: user.companyId,
@@ -190,19 +186,7 @@ export class ApplicationService {
     const [applications, total] = await Promise.all([
       this.applicationRepository.findAll({
         where: { jobId: jobId },
-        select: {
-          id: true,
-          phone: true,
-          CV: true,
-          user: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-              CV: true,
-            },
-          },
-        },
+        include: { user: true },
         skip: (page - 1) * limit,
         take: limit,
       }),
@@ -215,15 +199,8 @@ export class ApplicationService {
       'EX',
       60 * 60 * 12,
     );
-
-    return {
-      message: 'all job applications ',
-      data: applications,
-      meta: {
-        total,
-        pages: Math.ceil(total / limit),
-      },
-    };
+const res={data:applications,meta:{total,pages:Math.ceil(total/limit)}}
+    return res
   };
   acceptApplications = async (
     jobId: number,

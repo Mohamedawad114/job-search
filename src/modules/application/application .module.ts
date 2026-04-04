@@ -13,6 +13,7 @@ import { ApplicationService } from './application.service';
 import { ApplicationController } from './application.controller';
 import { notificationModel } from 'src/common/DB';
 import { GatewayModule } from '../gateway/gateway.module';
+import { ApplicationResolver } from './application.resolver';
 
 @Module({
   providers: [
@@ -20,13 +21,14 @@ import { GatewayModule } from '../gateway/gateway.module';
     ApplicationRepository,
     ApplicationService,
     NotificationRepository,
+    ApplicationResolver,
   ],
   imports: [
     EmailModule,
     rejectedApplicationsModule,
     AIJobModule,
     notificationModel,
-    GatewayModule
+    GatewayModule,
   ],
   controllers: [ApplicationController],
 })

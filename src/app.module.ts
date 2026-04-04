@@ -2,11 +2,12 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import {  ThrottlerModule } from '@nestjs/throttler';
 import { BullModule } from '@nestjs/bullmq';
 import { LoggerModule } from 'nestjs-pino';
-import { resolve } from 'path';
+import { join, resolve } from 'path';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import {
   CommonModule,
   GlobalErrFilter,
@@ -38,6 +39,8 @@ import {
 } from './modules';
 import { PrismaModule } from './prisma/prisma.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { GraphQLModule } from '@nestjs/graphql';
+import { GqlThrottlerGuard } from './common/guards';
 
 @Module({
   imports: [
@@ -50,13 +53,12 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     }),
     ThrottlerModule.forRoot([
       {
-        ttl: 30,
+        ttl: 30000,
         limit: 2000,
       },
     ]),
     BullModule.forRoot({
       connection: redis,
-      
     }),
     LoggerModule.forRoot({
       pinoHttp: {
@@ -69,6 +71,11 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
           },
         },
       },
+    }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      context: ({ req, res }) => ({ req, res }),
     }),
     EventEmitterModule.forRoot(),
     EmailModule,
@@ -98,7 +105,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     { provide: 'APP_INTERCEPTOR', useClass: ResponseInterceptor },
     { provide: 'APP_INTERCEPTOR', useClass: TimeoutInterceptor },
     { provide: 'APP_FILTER', useClass: GlobalErrFilter },
-    { provide: 'APP_GUARD', useClass: ThrottlerGuard },
+    { provide: 'APP_GUARD', useClass: GqlThrottlerGuard },
   ],
 })
 export class AppModule {}

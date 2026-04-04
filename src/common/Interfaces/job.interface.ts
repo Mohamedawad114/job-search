@@ -1,4 +1,5 @@
-import { JobStatus, jobType, Location } from '../Enum';
+import { JobStatus, jobType, Location, skillsLevel } from '../Enum';
+import { ICompany } from './company.interface';
 
 export interface IJob {
   id: number;
@@ -11,4 +12,11 @@ export interface IJob {
   maxNumApplication: number;
   applicationCount: number;
   status: JobStatus;
+  company: ICompany;
+}
+
+export interface IJobSkills {
+  jobId: number;
+  skillId: number;
+  level: skillsLevel;
 }

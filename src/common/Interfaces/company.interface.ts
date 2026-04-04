@@ -1,8 +1,7 @@
 export interface ICompany {
   name: string;
-  employeeNumber: number;
-  logo: string;
-  description: string;
+  logo?: string;
+  description?: string;
   email: string;
   website?: string;
   adminId: number;
@@ -10,6 +9,5 @@ export interface ICompany {
   formatAddress?: string;
   latitude?: number;
   longitude?: number;
-  placeId?: string;
-  workType: string;
+  workTypeId: number;
 }
