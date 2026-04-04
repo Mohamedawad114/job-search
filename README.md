@@ -16,6 +16,10 @@ A scalable and production-ready backend system for a job search platform built w
   * Create, update, and manage job postings
   * Advanced filtering (title, description, work type, remote/on-site)
 
+* 📊 **Hybrid API Architecture**
+    * **REST API** for standard resource management.
+    * **GraphQL (Apollo)** for flexible data fetching (Search & Profile) to eliminate over-fetching.
+
 * 🤖 **AI Integration**
 
   * CV parsing using PDF extraction
@@ -33,10 +37,12 @@ A scalable and production-ready backend system for a job search platform built w
   * Optimized database queries with Prisma
   & prisma Transaction
 
-* 💬 **Real-Time Features**
-
-  * Real-time chat system (private & group)
-  * Real-time notification system using MongoDB,mongoose
+* 💬 **Advanced Real-Time Chat (Full State)**
+    * Real-time messaging with **Socket.io**.
+    * Real-time chat system (private & group)
+    * Real-time notification system using MongoDB,mongoose -->
+    * **Presence System:** Online/Offline status tracking.
+    * **Message Lifecycle:** Mark as read, chat history retrieval, and delivery status via **Cursor Pagination**.
 
 * 📍 **Location Services**
 
@@ -51,7 +57,10 @@ A scalable and production-ready backend system for a job search platform built w
 ## 🏗️ Tech Stack
 
 * **Backend:** NestJS
-* **Database:** MySQL (Prisma ORM),mongodb (mongoose ODM)
+* **API Layer:** REST & **GraphQL (Apollo Server)**
+* **Databases:**
+    * **MySQL:** Handled by **Prisma ORM** (Core Business Logic).
+    * **MongoDB:** Handled by **Mongoose** (Chat History & Notifications).
 * **Real-time:** Socket.IO
 * **Queue:** BullMQ (Redis)
 * **AI:** OpenAI API | google Gemini
@@ -70,8 +79,15 @@ A scalable and production-ready backend system for a job search platform built w
 * Prisma Middleware for advanced query handling
 * Background jobs for heavy operations (AI, emails, async DB tasks)
 * Separation of concerns for scalability
+* Event-Driven: Decoupling notifications and AI analysis using background queues (Redis/BullMQ).
 
 ---
+## 1. GraphQL Integration
+* Implemented **Apollo Search** for jobs and users.
+* Secure Profile fetching using GraphQL Resolvers protected by JWT Guards.
+* Optimized Schema design for nested relations (e.g., Job -> Company -> Skills).
+&& (e.g., profile -> education -> experiences).
+
 
 ## 🔍 Advanced Features
 

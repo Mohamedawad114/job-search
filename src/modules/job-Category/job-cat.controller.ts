@@ -33,11 +33,11 @@ export class JobCatController {
   @ApiQuery({ name: 'page', type: Number, required: false, example: 1 })
   @ApiQuery({ name: 'limit', type: Number, required: false, example: 10 })
   @ApiResponse({ status: 200, description: 'List of job categories' })
-  getData(
+  async getData(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
   ) {
-    return this.jobCatService.allCategories(page, limit);
+    return await this.jobCatService.allCategories(page, limit);
   }
 
   @Get('/:id/jobs')
@@ -47,11 +47,11 @@ export class JobCatController {
   @ApiQuery({ name: 'limit', type: Number, required: false, example: 10 })
   @ApiResponse({ status: 200, description: 'List of jobs in category' })
   @ApiResponse({ status: 404, description: 'Category not found' })
-  jobsForCat(
+  async jobsForCat(
     @Param('id') id: number,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
   ) {
-    return this.jobCatService.allCategoryJobs(id, page, limit);
+    return await this.jobCatService.allCategoryJobs(id, page, limit);
   }
 }

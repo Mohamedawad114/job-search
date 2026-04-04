@@ -38,31 +38,31 @@ export class AccountController {
   @Get('upload')
   @ApiOperation({ summary: 'Get upload profile picture data (presigned URL)' })
   @ApiQuery({ type: uploadDto })
-  UploadPic(@AuthUser() user: IUser, @Query() type: uploadDto) {
-    return this.accountService.upload(user, type);
+  async UploadPic(@AuthUser() user: IUser, @Query() type: uploadDto) {
+    return await this.accountService.upload(user, type);
   }
   @Get('reset-passwordReq')
   @ApiOperation({ summary: 'Request password reset OTP' })
-  resetPasswordReq(@AuthUser() user: IUser) {
-    return this.accountService.resetPasswordReq(user);
+  async resetPasswordReq(@AuthUser() user: IUser) {
+    return await this.accountService.resetPasswordReq(user);
   }
 
   @Get('resend-OTP-reset')
   @ApiOperation({ summary: 'Resend reset password OTP' })
-  resendOTP_reset(@AuthUser() user: IUser) {
-    return this.accountService.resendOTP_reset(user);
+  async resendOTP_reset(@AuthUser() user: IUser) {
+    return await this.accountService.resendOTP_reset(user);
   }
   @Patch('update-password')
   @ApiOperation({ summary: 'Update current password' })
   @ApiBody({ type: updatePasswordDto })
   @ApiResponse({ status: 200, description: 'Password updated successfully' })
   @ApiBadRequestResponse({ description: 'invalid old Password' })
-  updatePassword(
+  async updatePassword(
     @AuthUser() user: IUser,
     @Body() dto: updatePasswordDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    return this.accountService.updatePassword(dto, user, res);
+    return await this.accountService.updatePassword(dto, user, res);
   }
   @Patch('reset-password')
   @HttpCode(200)
@@ -72,26 +72,26 @@ export class AccountController {
   @ApiBody({ type: ResetPasswordDto })
   @ApiResponse({ status: 200, description: 'Password reset successfully' })
   @ApiBadRequestResponse({ description: 'Invalid OTP or OTP expired' })
-  resetPassword(
+  async resetPassword(
     @AuthUser() user: IUser,
     @Body() dto: ResetPasswordDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    return this.accountService.resetPasswordConfirm(user, dto, res);
+    return await this.accountService.resetPasswordConfirm(user, dto, res);
   }
 
   @Patch('update-profile-picture')
   @HttpCode(200)
   @ApiOperation({ summary: 'Update profile picture' })
   @ApiBody({ type: UpdateUploadDto })
-  updateUpload(@AuthUser() user: IUser, @Body() dto: UpdateUploadDto) {
-    return this.accountService.updateUpload(dto, user);
+  async updateUpload(@AuthUser() user: IUser, @Body() dto: UpdateUploadDto) {
+    return await this.accountService.updateUpload(dto, user);
   }
 
   @Delete('logout')
   @HttpCode(200)
   @ApiOperation({ summary: 'Logout from current device' })
-  logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    return this.accountService.logout(req, res);
+  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    return await this.accountService.logout(req, res);
   }
 }

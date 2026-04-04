@@ -56,20 +56,9 @@ export class ProfileServices {
     const phone = user?.phoneNumber
       ? this.crypto.decryption(user.phoneNumber)
       : null;
-    return {
-      message: 'Profile',
-      data: {
-        id: userProfile.id,
-        username: userProfile.name,
-        email: userProfile.email,
-        dateOfBirth: userProfile.dateBirth,
-        phoneNumber: phone,
-        gender: userProfile.gender,
-        profilePicture: userProfile.profilePicture,
-        education: userProfile.education,
-        experience: userProfile.experiences,
-      },
-    };
+    userProfile.phoneNumber = phone;
+
+    return userProfile;
   };
   updateProfile = async (Dto: UpdateProfileDto, user: IUser) => {
     const data: any = { ...Dto };

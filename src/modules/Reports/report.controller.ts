@@ -52,13 +52,13 @@ export class AIReportsController {
   })
   @ApiNotFoundResponse({ description: 'Job not found' })
   @ApiForbiddenResponse({ description: 'Not authorized to view these reports' })
-  allJobReports(
+  async allJobReports(
     @AuthUser() user: IUser,
     @Param('jobId', ParseIntPipe) jobId: number,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
   ) {
-    return this.aiReportsServices.allJobReports(user, jobId, page, limit);
+    return await this.aiReportsServices.allJobReports(user, jobId, page, limit);
   }
 
   @Get(':reportId')
@@ -89,11 +89,11 @@ export class AIReportsController {
   })
   @ApiNotFoundResponse({ description: 'Report not found' })
   @ApiForbiddenResponse({ description: 'Not authorized' })
-  reportDetails(
+ async reportDetails(
     @AuthUser() user: IUser,
     @Param('reportId', ParseIntPipe) reportId: number,
   ) {
-    return this.aiReportsServices.reportDetails(user, reportId);
+    return await this.aiReportsServices.reportDetails(user, reportId);
   }
 
   @Get(':reportId/skills')
@@ -117,11 +117,11 @@ export class AIReportsController {
   })
   @ApiNotFoundResponse({ description: 'Report not found' })
   @ApiForbiddenResponse({ description: 'Not authorized' })
-  skillsReport(
+   async skillsReport(
     @AuthUser() user: IUser,
     @Param('reportId', ParseIntPipe) reportId: number,
   ) {
-    return this.aiReportsServices.skillsReport(user, reportId);
+    return await this.aiReportsServices.skillsReport(user, reportId);
   }
 
   @Get(':reportId/full')
@@ -153,10 +153,10 @@ export class AIReportsController {
   })
   @ApiNotFoundResponse({ description: 'Report not found' })
   @ApiForbiddenResponse({ description: 'Not authorized' })
-  getReportWithSkills(
+  async getReportWithSkills(
     @AuthUser() user: IUser,
     @Param('reportId', ParseIntPipe) reportId: number,
   ) {
-    return this.aiReportsServices.getReportWithSkills(user, reportId);
+    return await this.aiReportsServices.getReportWithSkills(user, reportId);
   }
 }

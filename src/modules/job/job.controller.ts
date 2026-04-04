@@ -39,8 +39,8 @@ export class JobController {
   @ApiOperation({ summary: 'Create a new job' })
   @ApiResponse({ status: 201, description: 'Job created successfully' })
   @ApiResponse({ status: 403, description: 'Forbidden' })
-  createJob(@Body() data: CreateJobDto, @AuthUser() user: IUser) {
-    const jobCreated = this.jobService.createJob(user, data);
+  async createJob(@Body() data: CreateJobDto, @AuthUser() user: IUser) {
+    const jobCreated = await this.jobService.createJob(user, data);
     return { message: 'job created successfully', data: jobCreated };
   }
 
@@ -51,7 +51,7 @@ export class JobController {
   @ApiParam({ name: 'id', type: Number, description: 'Job ID' })
   @ApiResponse({ status: 200, description: 'Job updated successfully' })
   @ApiResponse({ status: 404, description: 'Job not found' })
-  updateJob(
+  async updateJob(
     @Body() data: UpdateJobDto,
     @AuthUser() user: IUser,
     @Param('id', ParseIntPipe) jobId: number,
@@ -64,24 +64,24 @@ export class JobController {
   @ApiOperation({ summary: 'Change job status' })
   @ApiParam({ name: 'id', type: Number, description: 'Job ID' })
   @ApiResponse({ status: 200, description: 'Status changed successfully' })
-  changeStatus(
+  async changeStatus(
     @Param('id', ParseIntPipe) id: number,
     @AuthUser() user: IUser,
     @Body() status: ChangeStatus,
   ) {
-    return this.jobService.changeJobStatus(user, id, status);
+    return await this.jobService.changeJobStatus(user, id, status);
   }
   @Get('/search')
   @ApiOperation({ summary: 'Search jobs with filters' })
   @ApiQuery({ name: 'page', type: Number, required: false, example: 1 })
   @ApiQuery({ name: 'limit', type: Number, required: false, example: 10 })
   @ApiResponse({ status: 200, description: 'Jobs search results' })
-  search(
+  async search(
     @Query() filter: SearchDto,
     @Query('cursor') cursor: string,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
   ) {
-    const response = this.jobService.searchJobs(filter, limit, cursor);
+    const response = await this.jobService.searchJobs(filter, limit, cursor);
     return { message: 'jobs found', data: response };
   }
 
@@ -90,19 +90,19 @@ export class JobController {
   @ApiQuery({ name: 'page', type: Number, required: false, example: 1 })
   @ApiQuery({ name: 'limit', type: Number, required: false, example: 10 })
   @ApiResponse({ status: 200, description: 'List of all jobs' })
-  allJobs(
+  async allJobs(
     @Query('cursor') cursor: string,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
   ) {
-    return this.jobService.AllJobs(limit, cursor);
+    return await this.jobService.AllJobs(limit, cursor);
   }
   @Get(':id')
   @ApiOperation({ summary: 'Get job details by ID' })
   @ApiParam({ name: 'id', type: Number, description: 'Job ID' })
   @ApiResponse({ status: 200, description: 'Job details returned' })
   @ApiResponse({ status: 404, description: 'Job not found' })
-  jobDetails(@Param('id', ParseIntPipe) id: number) {
-    const job = this.jobService.getJobDetails(id);
-        return { message: 'job Details', data: job };
+  async jobDetails(@Param('id', ParseIntPipe) id: number) {
+    const job =await this.jobService.getJobDetails(id);
+    return { message: 'job Details', data: job };
   }
 }

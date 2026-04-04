@@ -42,6 +42,8 @@ export class UserEntity {
   companyId?: number;
   @Field(() => String, { nullable: true })
   CV?: string;
+  @Field()
+  dateBirth: Date;
   @Field(() => String, { nullable: true })
   bio?: string;
 }

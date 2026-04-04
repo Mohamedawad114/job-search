@@ -7,7 +7,7 @@ import { CreateJobGqlDto, JobDetailsArgs, SearchArgs } from "./dto";
 
 
 
-@Auth(Sys_Role.company_admin, Sys_Role.user)
+@Auth(Sys_Role.company_admin, Sys_Role.user, Sys_Role.admin)
 @Resolver()
 export class JobResolver {
   constructor(private readonly jobService: JobService) {}

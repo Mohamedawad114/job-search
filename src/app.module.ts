@@ -57,8 +57,7 @@ import { GqlThrottlerGuard } from './common/guards';
         limit: 2000,
       },
     ]),
-    BullModule.forRoot({
-      connection: redis,
+    BullModule.forRoot({connection: redis
     }),
     LoggerModule.forRoot({
       pinoHttp: {
@@ -74,7 +73,7 @@ import { GqlThrottlerGuard } from './common/guards';
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      autoSchemaFile: true,
       context: ({ req, res }) => ({ req, res }),
     }),
     EventEmitterModule.forRoot(),

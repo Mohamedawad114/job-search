@@ -2,6 +2,72 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type educationEntity {
+  id: Int!
+  userId: Int!
+  university: String!
+  college: String!
+  degree: degree!
+  startDate: DateTime!
+  graduationYear: Int!
+}
+
+enum degree {
+  Excellent
+  very_good
+  good
+  low
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type ExperienceEntity {
+  id: Int!
+  userId: Int!
+  company: String!
+  position: String!
+  startDate: DateTime!
+  endDate: DateTime!
+}
+
+type UserProfileEntity {
+  id: Int!
+  name: String!
+  email: String!
+  phoneNumber: String!
+  profilePicture: String
+  gender: Gender!
+  maritalStatus: maritalStatus!
+  MilitarySituation: MilitarySituation
+  companyId: Int
+  CV: String
+  dateBirth: DateTime!
+  bio: String
+  experiences: [ExperienceEntity!]
+  education: educationEntity
+}
+
+enum Gender {
+  male
+  female
+}
+
+enum maritalStatus {
+  single
+  married
+  divorced
+  widower
+}
+
+enum MilitarySituation {
+  exempt
+  completed
+  postponed
+}
+
 """Company details"""
 type Company {
   name: String!
@@ -83,25 +149,8 @@ type UserEntity {
   MilitarySituation: MilitarySituation
   companyId: Int
   CV: String
+  dateBirth: DateTime!
   bio: String
-}
-
-enum Gender {
-  male
-  female
-}
-
-enum maritalStatus {
-  single
-  married
-  divorced
-  widower
-}
-
-enum MilitarySituation {
-  exempt
-  completed
-  postponed
 }
 
 type ApplicationEntity {
@@ -135,6 +184,7 @@ type JobApplicationsResponse {
 }
 
 type Query {
+  getProfile: UserProfileEntity!
   searchJobs(location: JobLocation, type: JobType, skills: [Float!], search: String, cursor: String, limit: Float! = 10): JobResponse!
   jobDetails(jobId: Int!): JobEntity!
   all_job_applications(jobId: Int!, page: Int! = 1, limit: Int! = 10): JobApplicationsResponse!

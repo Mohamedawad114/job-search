@@ -13,6 +13,7 @@ import {
   UserSkillRepository,
 } from 'src/common';
 import { EmailModule, s3_services } from 'src/common/Utils/services';
+import { ProfileResolver } from './profile.resolver';
 
 @Module({
   imports: [EmailModule],
@@ -27,6 +28,7 @@ import { EmailModule, s3_services } from 'src/common/Utils/services';
     HashingService,
     s3_services,
     CompanyRepository,
+    ProfileResolver
   ],
   controllers: [ProfileController],
   exports: [],

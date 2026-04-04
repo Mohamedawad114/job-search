@@ -1,10 +1,10 @@
 import { Controller, Get, } from '@nestjs/common';
 
-@Controller('/')
+@Controller('/health')
 export class AppController {
   constructor() {}
 
-  @Get('')
+  @Get()
   getHello() {
     return { message: 'Welcome to Job Search API 🚀' };
   }

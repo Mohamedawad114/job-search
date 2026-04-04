@@ -57,12 +57,12 @@ export class CompanyController {
   })
   @ApiResponse({ status: 200, description: 'Companies found' })
   @ApiNotFoundResponse({ description: 'company not found' })
-  search(
+  async search(
     @Query('search') search: string,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
   ) {
-    return this.companyService.search(search, page, limit);
+    return await this.companyService.search(search, page, limit);
   }
   @Get('/all')
   @HttpCode(200)
@@ -74,11 +74,11 @@ export class CompanyController {
     description: 'Number of items per page',
   })
   @ApiResponse({ status: 200, description: 'Companies retrieved successfully' })
-  allCompanies(
+  async allCompanies(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
   ) {
-    return this.companyService.getAllCompanies(page, limit);
+    return await this.companyService.getAllCompanies(page, limit);
   }
   @Get('/:id')
   @HttpCode(200)
@@ -88,7 +88,7 @@ export class CompanyController {
     description: 'Company profile retrieved successfully',
   })
   @ApiNotFoundResponse({ description: 'company not found' })
-  companyProfile(
+  async companyProfile(
     @Param('id', ParseIntPipe) companyId: number,
     @AuthUser() user: IUser,
   ) {

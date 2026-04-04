@@ -49,8 +49,11 @@ export class AuthController {
     schema: { example: { access_token: 'string' } },
   })
   @ApiResponse({ status: 401, description: 'Invalid credentials' })
-  login(@Body() dto: LoginDto, @Res({ passthrough: true }) res: Response) {
-    return this.authServices.loginUser(dto, res);
+  async login(
+    @Body() dto: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return await this.authServices.loginUser(dto, res);
   }
 
   @HttpCode(200)
@@ -58,8 +61,8 @@ export class AuthController {
   @ApiOperation({ summary: 'Confirm user email using OTP' })
   @ApiBody({ type: ConfirmEmailDto })
   @ApiResponse({ status: 200, description: 'Email confirmed successfully' })
-  confirmEmail(@Body() dto: ConfirmEmailDto) {
-    return this.authServices.ConfirmEmail(dto);
+  async confirmEmail(@Body() dto: ConfirmEmailDto) {
+    return await this.authServices.ConfirmEmail(dto);
   }
 
   @HttpCode(200)
@@ -67,8 +70,8 @@ export class AuthController {
   @ApiOperation({ summary: 'Resend OTP to user email' })
   @ApiQuery({ type: ResendOtpDto })
   @ApiResponse({ status: 200, description: 'OTP send' })
-  resendOTP(@Query() dto: ResendOtpDto) {
-    return this.authServices.resendOTP(dto);
+  async resendOTP(@Query() dto: ResendOtpDto) {
+    return await this.authServices.resendOTP(dto);
   }
 
   @HttpCode(200)
@@ -84,7 +87,7 @@ export class AuthController {
     schema: { example: { access_token: 'string' } },
   })
   @ApiResponse({ status: 401, description: 'Invalid refresh token' })
-  refreshToken(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    return this.authServices.refreshToken(req, res);
+  async refreshToken(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    return await this.authServices.refreshToken(req, res);
   }
 }

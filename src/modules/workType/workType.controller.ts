@@ -30,11 +30,11 @@ export class WorkTypeController {
   @ApiQuery({ name: 'page', type: Number, required: false, example: 1 })
   @ApiQuery({ name: 'limit', type: Number, required: false, example: 10 })
   @ApiResponse({ status: 200, description: 'List of work categories' })
-  AllWorkCategory(
+  async AllWorkCategory(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
   ) {
-    return this.workTypeService.workCategories(page, limit);
+    return await this.workTypeService.workCategories(page, limit);
   }
 
   @Get('/:id/companies')
@@ -47,11 +47,11 @@ export class WorkTypeController {
     description: 'List of companies for this category',
   })
   @ApiResponse({ status: 404, description: 'Work type not found' })
-  AllCompaniesCategory(
+  async AllCompaniesCategory(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Param('id') workTypeId: number,
   ) {
-    return this.workTypeService.companies_forType(workTypeId, page, limit);
+    return await this.workTypeService.companies_forType(workTypeId, page, limit);
   }
 }
